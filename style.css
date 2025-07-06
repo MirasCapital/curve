@@ -1,0 +1,367 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap');
+
+body {
+  margin: 0;
+  height: 200vh;
+  background: #000000;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.wrapper {
+  position: relative;
+  height: 100%;
+}
+
+.background-card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #e4e3e3 0%, #000000 100%);
+  transform: translateY(0);
+  transition: transform 0.5s ease-out;
+}
+
+.container {
+  position: fixed;
+  width: 100%;
+  bottom: 5%;
+  left: 5%;
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.heading {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 700;
+  font-size: 3rem;
+  color: white;
+  margin-bottom: 0.2rem;
+  white-space: nowrap;
+  position: relative;
+  opacity: 1;
+  transform: translateX(-100%);
+  transition: transform 1s ease-out, top 0.5s ease-out;
+}
+
+.subheading {
+  font-size: 1.5rem;
+  color: lightgrey;
+  font-weight: bold;
+  white-space: nowrap;
+  position: relative;
+  left: 0.25%;
+  opacity: 1;
+  transform: translateX(-100%);
+  transition: transform 1s ease-out, opacity 0.5s ease-out;
+}
+
+.about-heading {
+  font-size: 1.5rem;
+  color: lightgrey;
+  font-weight: bold;
+  white-space: nowrap;
+  position: fixed;
+  bottom: 5%;
+  left: 5.25%;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: transform 1s ease-out, opacity 1s ease-out;
+}
+
+.about-content {
+  position: fixed;
+  width: 55%;
+  top: 25%;
+  left: 5.25%;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: transform 1s ease-out, opacity 1s ease-out;
+}
+
+.about-content p {
+  color: white;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.recent-transactions {
+  font-size: 1.5rem;
+  color: lightgrey;
+  font-weight: bold;
+  white-space: nowrap;
+  position: fixed;
+  bottom: 5%;
+  left: 5.25%;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: transform 1s ease-out, opacity 1s ease-out;
+}
+
+.deals {
+  position: fixed;
+  width: 100%;
+  top: 30%;
+  display: flex;
+  justify-content: space-around;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: transform 1s ease-out, opacity 1s ease-out;
+}
+
+.deal {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  background: rgb(255, 255, 255);
+  padding: 1.5rem;
+  border: 2px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 140px;
+  margin: 1rem;
+  height: 220px;
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.deal img {
+  max-width: 120px;
+  max-height: 60px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.deal .type {
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+}
+
+.deal .line {
+  height: 1px;
+  background: #ccc;
+  margin: 0.5rem 0;
+}
+
+.deal .year {
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: auto;
+  align-self: center;
+}
+
+.contact-intro {
+  color: white;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.contact-heading {
+  font-size: 1.5rem;
+  color: lightgrey;
+  font-weight: bold;
+  white-space: nowrap;
+  position: fixed;
+  bottom: 5%;
+  left: 5.25%;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: transform 1s ease-out, opacity 1s ease-out;
+}
+
+.contact-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 25%;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  padding-left: 5.25%;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: all 1s ease-out;
+}
+
+.contact-form {
+  width: 90%;
+  max-width: 500px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem 0;
+  border: none;
+  border-bottom: 1px solid white;
+  font-size: 1rem;
+  background: transparent;
+  color: white;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-bottom-color: #fff;
+}
+
+.submit-btn {
+  width: 200px;
+  padding: 0.75rem;
+  background: white;
+  color: black;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.submit-btn:hover {
+  background: rgb(0, 141, 185);
+}
+
+.form-message {
+  margin-top: 1rem;
+  padding: 0.75rem 0;
+  text-align: left;
+  display: none;
+  color: white;
+}
+
+.form-message.success {
+  display: block;
+  color: #4CAF50;
+}
+
+.form-message.error {
+  display: block;
+  color: #f44336;
+}
+
+.form-message.info {
+  display: block;
+  color: #2196F3;
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .heading {
+    font-size: clamp(2.5rem, 7vw, 4rem);
+  }
+  
+  .subheading {
+    font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+  }
+
+  .recent-transactions {
+    font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+  }
+  
+  .deals {
+    display: block; 
+    position: fixed; /* Ensures the container stays visible on mobile */
+    top: 25%; /* Centers the deals container vertically */
+    left: 95%; /* Centers the deals container horizontally */
+    transform: translate(-50%, -50%);
+    /* transform: translateX(-50%); /* Start off-screen to the left */
+    opacity: 1; /* Initially hidden */
+    transition: transform 1s ease-out, opacity 1s ease-out; /* Smooth transition */
+  }
+
+  .deal {
+    position: absolute;
+    left: 50%; /* Center each deal horizontally */
+    top: 50%; /* Center each deal vertically */
+    transform: translateX(-200%); /* Start hidden and scaled down */
+    width: 40%; /* Adjust width for smaller screens */
+    /* height: 50%; */
+    max-width: 140px;
+    opacity: 0;  /* Hidden initially */
+    transition: transform 1s ease, opacity 0.5s ease;
+  }
+  
+  .deal.active {
+    transform: translateX(-50%); /* Center and scale up */
+    opacity: 1; /* Fully visible */
+  }
+
+  .about-heading {
+    font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+  }
+  
+  .about-content {
+    top: 20%;
+    width: 85%;
+  }
+  
+  .about-content p {
+    font-size: 1rem;
+  }
+
+  .contact-intro {
+    color: white;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .contact-container {
+    position: fixed;
+    width: 90%;
+    height: 100%;
+    top: 10%;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding-top: 15%;  /* Added padding to account for heading */
+    padding-left: 5.25%;
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: all 1s ease-out;
+  }
+
+  .contact-heading {
+    font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+  }
+
+  .contact-form {
+    padding: 0 1rem;
+  }
+  
+  .submit-btn {
+    width: 50%;
+  }
+}
+
+/* iPad specific styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .wrapper {
+    width: 768px;
+    margin: 0 auto;
+  }
+  
+  .deals {
+    width: 768px;
+    left: 50%;
+    transform: translateX(-150%);
+  }
+
+  .deal {
+    width: 200px;
+  }
+
+  .about-content {
+    width: 70%;
+  }
+}
