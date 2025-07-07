@@ -239,6 +239,8 @@ const AUDForwardCurveTool = () => {
   const [dataSource, setDataSource] = useState('Manual Input');
   // Swap between RBA-style and full swap curve
   const [showRBAYieldCurve, setShowRBAYieldCurve] = useState(true);
+  // Add state for BBSW-OIS spread (in percent)
+  const [bbswOisSpread, setBbswOisSpread] = useState(0.20); // 20 basis points default
 
   const dataFetcher = new AUDDataFetcher();
 
@@ -274,6 +276,12 @@ const AUDForwardCurveTool = () => {
     }
   }, []);
 
+  // Helper to get adjusted BBSW rates
+  const getAdjustedBBSW = (rate: number | undefined) => {
+    if (typeof rate !== 'number' || isNaN(rate)) return '';
+    return (rate - bbswOisSpread).toFixed(4);
+  };
+
   // Calculate RBA-style yield curve (Cash + BBSW + Govt Bonds)
   const calculateRBAYieldCurve = useCallback(() => {
     if (!spotRates || !govBonds) {
@@ -282,15 +290,15 @@ const AUDForwardCurveTool = () => {
     }
     const curve: CurvePoint[] = [];
     curve.push({ tenor: 'Cash', months: 0, rate: Number(spotRates.cash), type: 'Cash Rate' });
-    curve.push({ tenor: '1M', months: 1, rate: Number(spotRates.oneMonth), type: 'BBSW' });
-    curve.push({ tenor: '3M', months: 3, rate: Number(spotRates.threeMonth), type: 'BBSW' });
-    curve.push({ tenor: '6M', months: 6, rate: Number(spotRates.sixMonth), type: 'BBSW' });
+    curve.push({ tenor: '1M', months: 1, rate: Number(spotRates.oneMonth) - bbswOisSpread, type: 'BBSW (adj)' });
+    curve.push({ tenor: '3M', months: 3, rate: Number(spotRates.threeMonth) - bbswOisSpread, type: 'BBSW (adj)' });
+    curve.push({ tenor: '6M', months: 6, rate: Number(spotRates.sixMonth) - bbswOisSpread, type: 'BBSW (adj)' });
     curve.push({ tenor: '2Y', months: 24, rate: Number(govBonds.bond2Y), type: 'Govt Bond' });
     curve.push({ tenor: '3Y', months: 36, rate: Number(govBonds.bond3Y), type: 'Govt Bond' });
     curve.push({ tenor: '5Y', months: 60, rate: Number(govBonds.bond5Y), type: 'Govt Bond' });
     curve.push({ tenor: '10Y', months: 120, rate: Number(govBonds.bond10Y), type: 'Govt Bond' });
     setForwardCurve(curve);
-  }, [spotRates, govBonds]);
+  }, [spotRates, govBonds, bbswOisSpread]);
 
   // Calculate full swap/forward curve (BBSW, forwards, bonds)
   const calculateForwardCurve = useCallback(() => {
@@ -299,16 +307,15 @@ const AUDForwardCurveTool = () => {
       return;
     }
     const curve: CurvePoint[] = [];
-    curve.push({ tenor: '1M', months: 1, rate: Number(spotRates.oneMonth), type: 'Spot' });
-    curve.push({ tenor: '3M', months: 3, rate: Number(spotRates.threeMonth), type: 'Spot' });
-    curve.push({ tenor: '6M', months: 6, rate: Number(spotRates.sixMonth), type: 'Spot' });
-    // Forwards and market implied points can be omitted or calculated differently if needed
+    curve.push({ tenor: '1M', months: 1, rate: Number(spotRates.oneMonth) - bbswOisSpread, type: 'Spot (adj)' });
+    curve.push({ tenor: '3M', months: 3, rate: Number(spotRates.threeMonth) - bbswOisSpread, type: 'Spot (adj)' });
+    curve.push({ tenor: '6M', months: 6, rate: Number(spotRates.sixMonth) - bbswOisSpread, type: 'Spot (adj)' });
     curve.push({ tenor: '2Y', months: 24, rate: Number(govBonds.bond2Y), type: 'Govt Bond' });
     curve.push({ tenor: '3Y', months: 36, rate: Number(govBonds.bond3Y), type: 'Govt Bond' });
     curve.push({ tenor: '5Y', months: 60, rate: Number(govBonds.bond5Y), type: 'Govt Bond' });
     curve.push({ tenor: '10Y', months: 120, rate: Number(govBonds.bond10Y), type: 'Govt Bond' });
     setForwardCurve(curve);
-  }, [spotRates, govBonds]);
+  }, [spotRates, govBonds, bbswOisSpread]);
 
   useEffect(() => {
     fetchMarketData();
@@ -438,6 +445,21 @@ const AUDForwardCurveTool = () => {
             Current Spot Rates (BBSW)
             {isLoadingData && <RefreshCw className="animate-spin text-primary" size={16} />}
           </h2>
+          {/* BBSW-OIS Spread Input */}
+          <div className="flex items-center gap-2 mb-2">
+            <label className="text-sm font-medium text-muted-foreground">BBSW-OIS Spread (bps):</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              max="1"
+              value={bbswOisSpread}
+              onChange={e => setBbswOisSpread(parseFloat(e.target.value) || 0)}
+              className="input w-20"
+            />
+            <span className="text-muted-foreground ml-1">%</span>
+            <span className="text-xs text-muted-foreground">(default 0.20 = 20bps)</span>
+          </div>
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium text-muted-foreground">Cash Rate:</label>
@@ -451,7 +473,7 @@ const AUDForwardCurveTool = () => {
               <span className="text-muted-foreground ml-1">%</span>
             </div>
             <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-muted-foreground">1M BBSW:</label>
+              <label className="text-sm font-medium text-muted-foreground">1M BBSW (adj):</label>
               <input
                 type="number"
                 step="0.0001"
@@ -460,9 +482,10 @@ const AUDForwardCurveTool = () => {
                 className="input w-24"
               />
               <span className="text-muted-foreground ml-1">%</span>
+              <span className="text-xs text-muted-foreground">(adj: {getAdjustedBBSW(spotRates?.oneMonth)})</span>
             </div>
             <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-muted-foreground">3M BBSW:</label>
+              <label className="text-sm font-medium text-muted-foreground">3M BBSW (adj):</label>
               <input
                 type="number"
                 step="0.0001"
@@ -471,9 +494,10 @@ const AUDForwardCurveTool = () => {
                 className="input w-24"
               />
               <span className="text-muted-foreground ml-1">%</span>
+              <span className="text-xs text-muted-foreground">(adj: {getAdjustedBBSW(spotRates?.threeMonth)})</span>
             </div>
             <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-muted-foreground">6M BBSW:</label>
+              <label className="text-sm font-medium text-muted-foreground">6M BBSW (adj):</label>
               <input
                 type="number"
                 step="0.0001"
@@ -482,6 +506,7 @@ const AUDForwardCurveTool = () => {
                 className="input w-24"
               />
               <span className="text-muted-foreground ml-1">%</span>
+              <span className="text-xs text-muted-foreground">(adj: {getAdjustedBBSW(spotRates?.sixMonth)})</span>
             </div>
           </div>
         </Card>
