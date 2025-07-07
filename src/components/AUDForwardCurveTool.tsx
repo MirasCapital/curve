@@ -7,9 +7,9 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Download, Calculator, TrendingUp, Info, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 import Papa from 'papaparse';
 
-// Chad.CN-inspired Card component
+// Chad.CN-inspired Card component - REVISED
 const Card = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`rounded-xl border bg-card text-card-foreground shadow-sm p-6 ${className}`}>{children}</div>
+  <div className={`card ${className}`}>{children}</div>
 );
 
 // Types for data
@@ -223,23 +223,30 @@ function cubicSplineInterpolate(points: { months: number; rate: number }[], tota
 }
 
 const AUDForwardCurveTool = () => {
+  // Dark mode state
+  const [isDarkMode, setIsDarkMode] = useState(false);
   // Current market data
   const [spotRates, setSpotRates] = useState<SpotRates | null>(null);
   // Government bond yields
   const [govBonds, setGovBonds] = useState<BondYields | null>(null);
   const [forwardCurve, setForwardCurve] = useState<CurvePoint[]>([]);
-  const [showInstructions, setShowInstructions] = useState(false);
-  const [useForecastMode, setUseForecastMode] = useState(false);
+  const [useForecastMode, setUseForecastMode] = useState(true);
   // Data fetching states
   const [isLoadingData, setIsLoadingData] = useState(false);
-  const [lastDataUpdate, setLastDataUpdate] = useState(null);
-  const [dataFetchErrors, setDataFetchErrors] = useState([]);
+  const [lastDataUpdate, setLastDataUpdate] = useState<string | null>(null);
+  const [dataFetchErrors, setDataFetchErrors] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState(true);
   const [dataSource, setDataSource] = useState('Manual Input');
   // Swap between RBA-style and full swap curve
   const [showRBAYieldCurve, setShowRBAYieldCurve] = useState(true);
 
   const dataFetcher = new AUDDataFetcher();
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark', !isDarkMode);
+  };
 
   // Fetch market data
   const fetchMarketData = useCallback(async () => {
@@ -361,280 +368,262 @@ const AUDForwardCurveTool = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6 bg-white">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">AUD Forward Curve Construction Tool</h1>
-        <p className="text-gray-600">Build forward-looking AUD swap curves using dynamic market data</p>
-        
-        {/* Data Status Bar */}
-        <div className="mt-4 p-3 bg-gray-50 rounded-lg border">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {isConnected ? <Wifi className="text-green-500" size={16} /> : <WifiOff className="text-red-500" size={16} />}
+    <div className={`w-full max-w-7xl mx-auto p-6 ${isDarkMode ? 'bg-background text-foreground' : 'bg-background text-foreground'}`}>
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="h1 mb-2">AUD Forward Curve Construction Tool</h1>
+          <p className="text-muted-foreground">Build forward-looking AUD swap curves using dynamic market data</p>
+        </div>
+        <button
+          onClick={toggleDarkMode}
+          className="btn-secondary h-10 px-4"
+        >
+          {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
+      </div>
+      {/* Data Status Bar */}
+      <div className="status-bar">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full gap-4">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              {isConnected ? (
+                <Wifi className="text-success" size={16} />
+              ) : (
+                <WifiOff className="text-destructive" size={16} />
+              )}
               <span className="text-sm">
                 Data Source: <strong>{dataSource}</strong>
               </span>
-              {lastDataUpdate && (
-                <span className="text-xs text-gray-500">
-                  Last Updated: {new Date(lastDataUpdate).toLocaleTimeString()}
-                </span>
-              )}
             </div>
+            {lastDataUpdate && (
+              <span className="text-xs text-muted-foreground">
+                Last Updated: {new Date(lastDataUpdate).toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              </span>
+            )}
+          </div>
+          <div className="button-group mt-2 md:mt-0">
             <button
               onClick={fetchMarketData}
               disabled={isLoadingData}
-              className="flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 disabled:opacity-50"
+              className="btn-primary h-10 min-w-[140px] px-4 flex items-center justify-center"
             >
-              <RefreshCw className={`${isLoadingData ? 'animate-spin' : ''}`} size={14} />
+              <RefreshCw className={`${isLoadingData ? 'animate-spin' : ''} mr-2`} size={16} />
               {isLoadingData ? 'Updating...' : 'Refresh Data'}
             </button>
+            <button
+              onClick={downloadCSV}
+              className="btn-ghost h-10 min-w-[140px] px-4 flex items-center justify-center"
+            >
+              <Download size={16} className="mr-2" />
+              Download CSV
+            </button>
           </div>
-          
-          {dataFetchErrors.length > 0 && (
-            <div className="mt-2 p-2 bg-red-100 border border-red-300 rounded text-xs">
-              <strong>Data Fetch Errors:</strong> {dataFetchErrors.join(', ')}
-            </div>
-          )}
-          
-          {dataSource.includes('Mock Data') && (
-            <div className="mt-2 p-2 bg-orange-100 border border-orange-300 rounded text-xs">
-              <strong>Using Mock Data:</strong> Live RBA data unavailable, using representative market rates with slight randomization
-            </div>
-          )}
         </div>
-        
-        <div className="flex gap-2 mt-4">
-          <button
-            onClick={() => setShowInstructions(!showInstructions)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
-          >
-            <Info size={16} />
-            Instructions
-          </button>
-          <button
-            onClick={downloadCSV}
-            className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200"
-          >
-            <Download size={16} />
-            Download CSV
-          </button>
-        </div>
-
-        {showInstructions && (
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <h3 className="font-semibold text-blue-900 mb-2">How to Use This Tool:</h3>
-            <ol className="list-decimal list-inside text-blue-800 space-y-1 text-sm">
-              <li>Click <strong>"Refresh Data"</strong> to automatically fetch current market data</li>
-              <li>Manual adjustments can be made to any input fields as needed</li>
-              <li>The forward curve automatically recalculates using bootstrapping methodology</li>
-              <li>Data is automatically refreshed every 15 minutes</li>
-              <li>Download the results as CSV for use in Excel or other tools</li>
-            </ol>
-            <div className="mt-3 pt-3 border-t border-blue-300">
-              <h4 className="font-semibold text-blue-900 mb-1">Data Sources (Auto-fetched):</h4>
-              <ul className="text-xs text-blue-700 space-y-1">
-                <li>• <strong>Nomics World API:</strong> Professional financial data API for RBA statistical tables</li>
-                <li>• <strong>Live Data:</strong> F1 (Money Market) and F2 (Capital Market) via db.nomics.world</li>
-                <li>• <strong>Update Frequency:</strong> Real-time API access to latest RBA data</li>
-                <li>• <strong>Reliability:</strong> Enterprise-grade data service with high availability</li>
-              </ul>
-            </div>
+        {dataFetchErrors.length > 0 && (
+          <div className="info-box bg-destructive/10 text-destructive-foreground border-destructive-foreground/20 mt-2">
+            <strong>Data Fetch Errors:</strong> {dataFetchErrors.join(', ')}
+          </div>
+        )}
+        {dataSource.includes('Mock Data') && (
+          <div className="info-box bg-warning/10 text-warning-foreground border-warning-foreground/20 mt-2">
+            <strong>Using Mock Data:</strong> Live RBA data unavailable, using representative market rates with slight randomization
           </div>
         )}
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Current Spot Rates Input */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+      {/* Input Grid - REVISED TO USE CARD COMPONENT */}
+      <div className="input-grid">
+        <Card>
+          <h2 className="section-title">
             <Calculator size={20} />
             Current Spot Rates (BBSW)
-            {isLoadingData && <RefreshCw className="animate-spin text-blue-500" size={16} />}
+            {isLoadingData && <RefreshCw className="animate-spin text-primary" size={16} />}
           </h2>
           <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700">Cash Rate:</label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-muted-foreground">Cash Rate:</label>
               <input
                 type="number"
-                step="0.01"
+                step="0.0001"
                 value={spotRates?.cash?.toFixed(4) || ''}
                 onChange={e => setSpotRates({ ...spotRates!, cash: parseFloat(e.target.value) || 0 })}
-                className="w-24 px-2 py-1 border rounded text-right font-mono text-sm"
+                className="input w-24"
               />
-              <span className="text-sm text-gray-500">%</span>
+              <span className="text-muted-foreground ml-1">%</span>
             </div>
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700">1M BBSW:</label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-muted-foreground">1M BBSW:</label>
               <input
                 type="number"
-                step="0.01"
+                step="0.0001"
                 value={spotRates?.oneMonth?.toFixed(4) || ''}
                 onChange={e => setSpotRates({ ...spotRates!, oneMonth: parseFloat(e.target.value) || 0 })}
-                className="w-24 px-2 py-1 border rounded text-right font-mono text-sm"
+                className="input w-24"
               />
-              <span className="text-sm text-gray-500">%</span>
+              <span className="text-muted-foreground ml-1">%</span>
             </div>
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700">3M BBSW:</label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-muted-foreground">3M BBSW:</label>
               <input
                 type="number"
-                step="0.01"
+                step="0.0001"
                 value={spotRates?.threeMonth?.toFixed(4) || ''}
                 onChange={e => setSpotRates({ ...spotRates!, threeMonth: parseFloat(e.target.value) || 0 })}
-                className="w-24 px-2 py-1 border rounded text-right font-mono text-sm"
+                className="input w-24"
               />
-              <span className="text-sm text-gray-500">%</span>
+              <span className="text-muted-foreground ml-1">%</span>
             </div>
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700">6M BBSW:</label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-muted-foreground">6M BBSW:</label>
               <input
                 type="number"
-                step="0.01"
+                step="0.0001"
                 value={spotRates?.sixMonth?.toFixed(4) || ''}
                 onChange={e => setSpotRates({ ...spotRates!, sixMonth: parseFloat(e.target.value) || 0 })}
-                className="w-24 px-2 py-1 border rounded text-right font-mono text-sm"
+                className="input w-24"
               />
-              <span className="text-sm text-gray-500">%</span>
+              <span className="text-muted-foreground ml-1">%</span>
             </div>
           </div>
-        </div>
-
-        {/* Government Bond Yields Input */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+        </Card>
+        <Card>
+          <h2 className="section-title">
             <TrendingUp size={20} />
             Govt Bond Rate
-            {isLoadingData && <RefreshCw className="animate-spin text-blue-500" size={16} />}
+            {isLoadingData && <RefreshCw className="animate-spin text-primary" size={16} />}
           </h2>
           <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700">2Y Govt Bond:</label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-muted-foreground">2Y Govt Bond:</label>
               <input
                 type="number"
                 step="0.01"
                 value={govBonds && typeof govBonds.bond2Y === 'number' && !isNaN(govBonds.bond2Y) ? govBonds.bond2Y.toFixed(2) : ''}
                 onChange={(e) => setGovBonds({...govBonds!, bond2Y: parseFloat(e.target.value) || 0})}
-                className="w-20 px-2 py-1 border rounded text-right font-mono text-sm"
+                className="input w-20"
               />
-              <span className="text-sm text-gray-500">%</span>
+              <span className="text-muted-foreground ml-1">%</span>
             </div>
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700">3Y Govt Bond:</label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-muted-foreground">3Y Govt Bond:</label>
               <input
                 type="number"
                 step="0.01"
                 value={govBonds && typeof govBonds.bond3Y === 'number' && !isNaN(govBonds.bond3Y) ? govBonds.bond3Y.toFixed(2) : ''}
                 onChange={(e) => setGovBonds({...govBonds!, bond3Y: parseFloat(e.target.value) || 0})}
-                className="w-20 px-2 py-1 border rounded text-right font-mono text-sm"
+                className="input w-20"
               />
-              <span className="text-sm text-gray-500">%</span>
+              <span className="text-muted-foreground ml-1">%</span>
             </div>
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700">5Y Govt Bond:</label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-muted-foreground">5Y Govt Bond:</label>
               <input
                 type="number"
                 step="0.01"
                 value={govBonds && typeof govBonds.bond5Y === 'number' && !isNaN(govBonds.bond5Y) ? govBonds.bond5Y.toFixed(2) : ''}
                 onChange={(e) => setGovBonds({...govBonds!, bond5Y: parseFloat(e.target.value) || 0})}
-                className="w-20 px-2 py-1 border rounded text-right font-mono text-sm"
+                className="input w-20"
               />
-              <span className="text-sm text-gray-500">%</span>
+              <span className="text-muted-foreground ml-1">%</span>
             </div>
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700">10Y Govt Bond:</label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-muted-foreground">10Y Govt Bond:</label>
               <input
                 type="number"
                 step="0.01"
                 value={govBonds && typeof govBonds.bond10Y === 'number' && !isNaN(govBonds.bond10Y) ? govBonds.bond10Y.toFixed(2) : ''}
                 onChange={(e) => setGovBonds({...govBonds!, bond10Y: parseFloat(e.target.value) || 0})}
-                className="w-20 px-2 py-1 border rounded text-right font-mono text-sm"
+                className="input w-20"
               />
-              <span className="text-sm text-gray-500">%</span>
+              <span className="text-muted-foreground ml-1">%</span>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
-
-      {/* Forward Curve Chart */}
+      {/* Forward Curve Chart - REVISED CLASS */}
       {forwardCurve.length > 0 && (
-        <div className="bg-white border rounded-lg p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">
+        <div className="chart-container">
+          <h2 className="section-title">
             {showRBAYieldCurve ? 'RBA Government Bond Yield Curve' : 'AUD Forward Swap Curve'}
           </h2>
-          <div className="mb-2 flex items-center gap-4">
-            <label className="text-sm font-medium text-gray-700">
+          <div className="mb-4 flex items-center gap-4">
+            <label className="text-sm font-medium text-muted-foreground flex items-center">
               <input
                 type="checkbox"
                 checked={showRBAYieldCurve}
                 onChange={e => setShowRBAYieldCurve(e.target.checked)}
-                className="mr-2"
+                className="mr-2 h-4 w-4 rounded border-border text-primary focus:ring-primary"
               />
-              Show only Cash Rate & Govt Bonds (RBA-style)
+              Show Cash Rate & Govt Bonds (RBA-style)
             </label>
           </div>
           <ResponsiveContainer width="100%" height={400}>
             <LineChart data={forwardCurve}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="tenor" label={{ value: 'Term to Maturity', position: 'insideBottom', offset: -5 }} />
-              <YAxis 
+              <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />
+              <XAxis dataKey="tenor" stroke="hsl(var(--muted-foreground))" label={{ value: 'Term to Maturity', position: 'insideBottom', offset: -5, fill: 'hsl(var(--muted-foreground))' }} />
+              <YAxis
+                stroke="hsl(var(--muted-foreground))"
                 domain={['dataMin - 0.1', 'dataMax + 0.1']}
                 tickFormatter={(value) => `${value.toFixed(2)}%`}
-                label={{ value: 'Yield (%)', angle: -90, position: 'insideLeft' }}
+                label={{ value: 'Yield (%)', angle: -90, position: 'insideLeft', fill: 'hsl(var(--muted-foreground))' }}
               />
-              <Tooltip 
+              <Tooltip
+                contentStyle={{ background: 'hsl(var(--popover))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--popover-foreground))' }}
+                itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
+                labelStyle={{ color: 'hsl(var(--muted-foreground))' }}
                 formatter={(value: number, name: string) => [`${typeof value === 'number' ? value.toFixed(4) : value}%`, 'Yield']}
                 labelFormatter={(label) => `Tenor: ${label}`}
               />
-              <Legend />
-              <Line 
-                type="monotone" 
-                dataKey="rate" 
-                stroke="#2563eb" 
+              <Legend wrapperStyle={{ color: 'hsl(var(--muted-foreground))' }} />
+              <Line
+                type="monotone"
+                dataKey="rate"
+                stroke="hsl(var(--primary))"
                 strokeWidth={2}
-                dot={{ r: 4 }}
+                dot={{ r: 4, fill: 'hsl(var(--primary))', stroke: 'hsl(var(--primary))' }}
                 name="Yield (%)"
               />
-            </LineChart>         
+            </LineChart>
           </ResponsiveContainer>
         </div>
       )}
-
-      {/* Monthly Interpolated Curve */}
-      <div className="bg-white border rounded-lg p-6 mt-8">
+      {/* Monthly Interpolated Curve - REVISED CLASS */}
+      <div className="chart-container mt-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Monthly Interpolated Forward Curve (0–96 months)</h2>
+          <h2 className="section-title">Monthly Interpolated Forward Curve (0–96 months)</h2>
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700">
+            <label className="text-sm font-medium text-muted-foreground flex items-center">
               <input
                 type="checkbox"
                 checked={useForecastMode}
                 onChange={(e) => setUseForecastMode(e.target.checked)}
-                className="mr-2"
+                className="mr-2 h-4 w-4 rounded border-border text-primary focus:ring-primary"
               />
               Use Cubic Spline Interpolation (vs Linear)
             </label>
           </div>
         </div>
-        
-        
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={useForecastMode ? forecasted : interpolated}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" label={{ value: 'Month', position: 'insideBottom', offset: -5 }} />
-            <YAxis domain={['dataMin - 0.1', 'dataMax + 0.1']} tickFormatter={v => `${v.toFixed(2)}%`} />
-            <Tooltip formatter={(v: number) => (typeof v === 'number' ? `${v.toFixed(2)}%` : v)} />
-            <Line type="monotone" dataKey="rate" stroke="#4f46e5" dot={false} strokeWidth={2} />
+            <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />
+            <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" label={{ value: 'Month', position: 'insideBottom', offset: -5, fill: 'hsl(var(--muted-foreground))' }} />
+            <YAxis domain={['dataMin - 0.1', 'dataMax + 0.1']} tickFormatter={v => `${v.toFixed(2)}%`} stroke="hsl(var(--muted-foreground))" />
+            <Tooltip
+              contentStyle={{ background: 'hsl(var(--popover))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--popover-foreground))' }}
+              itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
+              labelStyle={{ color: 'hsl(var(--muted-foreground))' }}
+              formatter={(v: number) => (typeof v === 'number' ? `${v.toFixed(2)}%` : v)}
+            />
+            <Line type="monotone" dataKey="rate" stroke="hsl(var(--primary))" dot={false} strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>
-
-      {/* Data Table */}
-      <div className="bg-white border rounded-lg p-6">
-        <h2 className="text-xl font-semibold mb-4">Forward Curve Data Points</h2>
+      {/* Data Table - REVISED CLASS */}
+      <div className="card mt-8">
+        <h2 className="section-title">Forward Curve Data Points</h2>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="table">
             <thead>
-              <tr className="bg-gray-50">
+              <tr className="bg-secondary">
                 <th className="px-4 py-2 text-left">Tenor</th>
                 <th className="px-4 py-2 text-left">Months</th>
                 <th className="px-4 py-2 text-right">Rate (%)</th>
@@ -643,11 +632,11 @@ const AUDForwardCurveTool = () => {
             </thead>
             <tbody>
               {forwardCurve.map((point, index) => (
-                <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                <tr key={index}>
                   <td className="px-4 py-2 font-medium">{point.tenor}</td>
                   <td className="px-4 py-2">{point.months}</td>
                   <td className="px-4 py-2 text-right font-mono">{point.rate.toFixed(4)}</td>
-                  <td className="px-4 py-2 text-sm text-gray-600">{point.type}</td>
+                  <td className="px-4 py-2 text-sm text-muted-foreground">{point.type}</td>
                 </tr>
               ))}
             </tbody>

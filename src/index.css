@@ -1,87 +1,482 @@
-/* globals.css for Chad.CN/shadcn/ui + Tailwind */
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Chad.CN/shadcn/ui theme variables */
 :root {
-  --background: 255 255 255;
-  --foreground: 17 24 39;
-  --card: 249 250 251;
-  --card-foreground: 17 24 39;
-  --popover: 255 255 255;
-  --popover-foreground: 17 24 39;
-  --primary: 37 99 235;
-  --primary-foreground: 255 255 255;
-  --secondary: 241 245 249;
-  --secondary-foreground: 17 24 39;
-  --muted: 243 244 246;
-  --muted-foreground: 107 114 128;
-  --accent: 239 246 255;
-  --accent-foreground: 37 99 235;
-  --destructive: 239 68 68;
-  --destructive-foreground: 255 255 255;
-  --border: 229 231 235;
-  --input: 229 231 235;
-  --ring: 59 130 246;
-  --radius: 0.75rem;
+  /* Colors - Light Theme (Default) */
+  --background: 0 0% 100%; /* White */
+  --foreground: 222.2 47.4% 11.2%; /* Almost black */
+
+  --primary: 214.5 91.8% 57.3%; /* A vibrant blue for primary actions/branding */
+  --primary-foreground: 0 0% 100%; /* White text on primary */
+
+  --secondary: 210 40% 96.1%; /* Light gray for secondary elements */
+  --secondary-foreground: 222.2 47.4% 11.2%; /* Dark text on secondary */
+
+  --tertiary: 210 20% 98%; /* Even lighter gray for subtle backgrounds */
+  --tertiary-foreground: 222.2 47.4% 11.2%;
+
+  --accent: 210 40% 96.1%; /* Similar to secondary, for hover/active states */
+  --accent-foreground: 222.2 47.4% 11.2%;
+
+  --muted: 210 40% 96.1%; /* Muted backgrounds (e.g., disabled, subtle info) */
+  --muted-foreground: 215.4 16.3% 46.9%; /* Muted text color */
+
+  --card: 0 0% 100%; /* Card background (white) */
+  --card-foreground: 222.2 47.4% 11.2%; /* Card text */
+
+  --popover: 0 0% 100%; /* Popover/tooltip background */
+  --popover-foreground: 222.2 47.4% 11.2%; /* Popover/tooltip text */
+
+  --border: 214.3 31.8% 91.4%; /* Default border color */
+  --input: 214.3 31.8% 91.4%; /* Input border/background */
+  --ring: 214.5 91.8% 57.3%; /* Focus ring color (primary blue) */
+
+  --destructive: 0 84.2% 60.2%; /* Red for errors/destructive actions */
+  --destructive-foreground: 0 0% 98%; /* White text on destructive */
+
+  --success: 142.1 76.2% 36.3%; /* Green for success */
+  --success-foreground: 0 0% 98%;
+
+  --warning: 48 96% 45.3%; /* Yellow for warnings */
+  --warning-foreground: 222.2 47.4% 11.2%;
+
+  --info: 214.5 91.8% 57.3%; /* Blue for informational messages (same as primary) */
+  --info-foreground: 0 0% 100%;
+
+  /* Spacing & Radii */
+  --radius: 0.75rem; /* Base border radius for most elements (e.g., buttons, cards) */
+
+  /* Typography - Default Fonts (Assuming these are loaded globally, e.g., via Next.js Font) */
+  /* Example for Google Fonts like Roboto/Inter and a display font like Product Sans (if available) */
+  --font-sans: 'Roboto', 'Inter', system-ui, sans-serif;
+  /* --font-display: 'Product Sans', 'Inter', system-ui, sans-serif; */
 }
 
+/* Dark Theme */
+.dark {
+  --background: 222.2 47.4% 11.2%; /* Dark background */
+  --foreground: 210 40% 96.1%; /* Light foreground */
+
+  --primary: 214.5 91.8% 57.3%; /* Primary remains vibrant */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 217.2 32.6% 17.5%; /* Darker secondary */
+  --secondary-foreground: 210 40% 96.1%;
+
+  --tertiary: 217.2 20% 15%;
+  --tertiary-foreground: 210 40% 96.1%;
+
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.4% 65%;
+
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 96.1%;
+
+  --card: 222.2 47.4% 11.2%;
+  --card-foreground: 210 40% 96.1%;
+
+  --popover: 222.2 47.4% 11.2%;
+  --popover-foreground: 210 40% 96.1%;
+
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 214.5 91.8% 57.3%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+
+  --success: 142.1 70.2% 28.3%;
+  --success-foreground: 0 0% 98%;
+
+  --warning: 48 96% 35.3%;
+  --warning-foreground: 222.2 47.4% 11.2%;
+
+  --info: 214.5 91.8% 47.3%;
+  --info-foreground: 0 0% 100%;
+}
+
+/*
+ * 2. Base Styles
+ * Apply sensible defaults to HTML elements.
+ * Prefer `text-foreground` and `bg-background` for core colors.
+ */
 body {
-  background-color: rgb(var(--background));
-  color: rgb(var(--foreground));
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
-/* Card, Button, Input, etc. */
-.bg-card {
-  background-color: rgb(var(--card));
+/* Headings - use a distinct font if `--font-display` is defined */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700; /* font-bold */
+  letter-spacing: -0.015em; /* tracking-tight */
+  /* Fallback to foreground color */
+  color: hsl(var(--foreground));
+  /* font-family: var(--font-display, var(--font-sans)); */
 }
-.text-card-foreground {
-  color: rgb(var(--card-foreground));
+h1 {
+  font-size: 2.25rem; /* text-4xl */
+  line-height: 2.5rem;
+  font-family: var(--font-display, inherit);
 }
-.border {
-  border-color: rgb(var(--border));
-}
-.bg-primary {
-  background-color: rgb(var(--primary));
-}
-.text-primary-foreground {
-  color: rgb(var(--primary-foreground));
-}
-.bg-secondary {
-  background-color: rgb(var(--secondary));
-}
-.text-secondary-foreground {
-  color: rgb(var(--secondary-foreground));
-}
-.bg-muted {
-  background-color: rgb(var(--muted));
-}
-.text-muted-foreground {
-  color: rgb(var(--muted-foreground));
-}
-.bg-accent {
-  background-color: rgb(var(--accent));
-}
-.text-accent-foreground {
-  color: rgb(var(--accent-foreground));
-}
-.bg-destructive {
-  background-color: rgb(var(--destructive));
-}
-.text-destructive-foreground {
-  color: rgb(var(--destructive-foreground));
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 3rem; /* lg:text-5xl */
+    line-height: 1;
+  }
 }
 
-/* Radius utility for shadcn/ui */
-.rounded-xl {
-  border-radius: var(--radius);
+h2 {
+  font-size: 1.875rem; /* text-3xl */
+  line-height: 2.25rem;
+  font-family: var(--font-display, inherit);
+}
+@media (min-width: 1024px) {
+  h2 {
+    font-size: 2.25rem; /* lg:text-4xl */
+    line-height: 2.5rem;
+  }
 }
 
-/* Optional: smooth transitions for UI */
-* {
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+h3 {
+  font-size: 1.5rem; /* text-2xl */
+  line-height: 2rem;
+  font-family: var(--font-display, inherit);
+}
+@media (min-width: 1024px) {
+  h3 {
+    font-size: 1.875rem; /* lg:text-3xl */
+    line-height: 2.25rem;
+  }
+}
+
+h4 {
+  font-size: 1.25rem; /* text-xl */
+  line-height: 1.75rem;
+}
+@media (min-width: 1024px) {
+  h4 {
+    font-size: 1.5rem; /* lg:text-2xl */
+    line-height: 2rem;
+  }
+}
+
+h5 {
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.75rem;
+}
+
+h6 {
+  font-size: 1rem; /* text-base */
+  line-height: 1.5rem;
+}
+
+/* Links */
+a {
+  color: hsl(var(--primary));
+  transition: color 0.2s;
+}
+a:hover {
+  text-decoration: underline;
+  color: hsl(var(--primary));
+}
+
+/*
+ * 3. Component-Like Global Styles (for consistency, but encourage actual components)
+ * These are generic styles that can be applied via classes.
+ * For more complex components, build dedicated React/Vue/etc. components.
+ */
+
+/* Buttons - Primary style */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition-property: background-color, color, border-color, box-shadow;
+  transition-duration: 150ms;
+  outline: none;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  height: 2.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--ring)), 0 1px 2px 0 rgba(0,0,0,0.05);
+}
+.btn-primary:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.btn-primary:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
+/* Buttons - Secondary style (e.g., outline) */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition-property: background-color, color, border-color, box-shadow;
+  transition-duration: 150ms;
+  outline: none;
+  cursor: pointer;
+  border: 1px solid hsl(var(--input));
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+}
+.btn-secondary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--ring)), 0 1px 2px 0 rgba(0,0,0,0.05);
+}
+.btn-secondary:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.btn-secondary:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* Buttons - Ghost style (minimal) */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition-property: background-color, color, border-color, box-shadow;
+  transition-duration: 150ms;
+  outline: none;
+  cursor: pointer;
+  border: 1px solid hsl(var(--input));
+  background-color: transparent;
+  color: hsl(var(--accent-foreground));
+}
+.btn-ghost:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--ring)), 0 1px 2px 0 rgba(0,0,0,0.05);
+}
+.btn-ghost:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.btn-ghost:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* Input Fields - General Styling */
+.input {
+  display: flex;
+  height: 2.5rem;
+  width: 100%;
+  border-radius: 0.375rem;
+  border: 1px solid hsl(var(--input));
+  background-color: hsl(var(--background));
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: hsl(var(--foreground));
+  box-sizing: border-box;
+}
+.input[type="number"], .input[inputmode="numeric"] {
+  text-align: right;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Cards / Panels - Use semantic background and shadows */
+.card {
+  border-radius: 0.75rem;
+  border: 1px solid hsl(var(--border));
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  transition: box-shadow 0.2s;
+}
+
+/* Tables - Cleaner, more readable, and responsive-ready */
+.table {
+  width: 100%;
+  font-size: 0.875rem;
+  caption-side: bottom;
+}
+
+.table > :not(caption) > * > * {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  text-align: left;
+}
+
+.table thead th {
+  vertical-align: middle;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--secondary));
+}
+
+.table tbody tr {
+  border-bottom: 1px solid hsl(var(--border));
+  transition: background-color 0.2s;
+}
+.table tbody tr:hover {
+  background-color: hsl(var(--muted), 0.5);
+}
+
+.table tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.table tfoot td, .table tfoot th {
+  color: hsl(var(--muted-foreground));
+}
+
+/* Utility for status bar and info */
+.status-bar {
+  margin-top: 1rem; /* mt-4 */
+  padding: 0.75rem; /* p-3 */
+  background-color: hsl(var(--tertiary)); /* bg-tertiary */
+  display: flex; /* flex */
+  align-items: center; /* items-center */
+  justify-content: space-between; /* justify-between */
+  font-size: 0.875rem; /* text-sm */
+  color: hsl(var(--muted-foreground)); /* text-muted-foreground */
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-sm */
+}
+
+.chart-container {
+  border-radius: 0.75rem; /* rounded-xl */
+  border: 1px solid hsl(var(--border)); /* border */
+  background-color: hsl(var(--card)); /* bg-card */
+  color: hsl(var(--card-foreground)); /* text-card-foreground */
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-elevation-1 */
+  margin-bottom: 1.5rem; /* mb-6 */
+  padding: 1rem; /* p-4 */
+  transition: box-shadow 0.2s; /* transition-shadow */
+}
+@media (min-width: 640px) {
+  .chart-container {
+    padding: 1.5rem; /* sm:p-6 */
+  }
+}
+@media (min-width: 1024px) {
+  .chart-container {
+    padding: 2rem; /* lg:p-8 */
+  }
+}
+
+/* Responsive container for charts */
+.chart-container {
+  border-radius: 0.75rem; /* rounded-xl */
+  border: 1px solid hsl(var(--border)); /* border */
+  background-color: hsl(var(--card)); /* bg-card */
+  color: hsl(var(--card-foreground)); /* text-card-foreground */
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-elevation-1 */
+  margin-bottom: 1.5rem; /* mb-6 */
+  padding: 1rem; /* p-4 */
+  transition: box-shadow 0.2s; /* transition-shadow */
+}
+@media (min-width: 640px) {
+  .chart-container {
+    padding: 1.5rem; /* sm:p-6 */
+  }
+}
+@media (min-width: 1024px) {
+  .chart-container {
+    padding: 2rem; /* lg:p-8 */
+  }
+}
+
+/* Instructions and info boxes */
+.info-box {
+  margin-top: 1rem; /* mt-4 */
+  padding: 1rem; /* p-4 */
+  border-radius: 0.5rem; /* rounded-lg */
+  border-width: 1px; /* border */
+  border-style: solid;
+  background-color: hsl(var(--info), 0.1); /* bg-info/10 */
+  color: hsl(var(--info-foreground)); /* text-info-foreground */
+  border-color: hsl(var(--info-foreground), 0.2); /* border-info-foreground/20 */
+  font-size: 0.875rem; /* text-sm */
+}
+
+/* Section headings */
+.section-title {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600; /* font-semibold */
+  margin-bottom: 1rem; /* mb-4 */
+  display: flex; /* flex */
+  align-items: center; /* items-center */
+  gap: 0.5rem; /* gap-2 */
+  color: hsl(var(--foreground)); /* text-foreground */
+  border-bottom-width: 1px; /* border-b */
+  border-bottom-style: solid;
+  border-bottom-color: hsl(var(--border)); /* border-border */
+  padding-bottom: 0.5rem; /* pb-2 */
+  /* Subtle separator */
+}
+
+/* Data input grid */
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem; /* gap-6 */
+  margin-bottom: 2rem; /* mb-8 */
+}
+
+/* Responsive columns */
+@media (min-width: 768px) {
+  .input-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .input-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1280px) {
+  .input-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/*
+ * 4. Accessibility and Semantic Enhancements
+ */
+/* Visually hidden for screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus styles for keyboard navigation - important for Google-like feel */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--ring)), 0 1px 2px 0 rgba(0,0,0,0.05);
 }
