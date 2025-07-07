@@ -368,277 +368,214 @@ const AUDForwardCurveTool = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
+    <div className="min-h-screen bg-background">
       <div className="w-full max-w-7xl mx-auto p-6">
-        {/* Enhanced Header Section */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-accent/10 border border-border/50 backdrop-blur-sm mb-8">
-          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-          <div className="relative p-8">
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
-                    <TrendingUp className="h-6 w-6 text-primary" />
-                  </div>
-                  <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                    AUD Forward Curve Construction Tool
-                  </h1>
-                </div>
-                <p className="text-lg text-muted-foreground max-w-2xl">
-                  Build forward-looking AUD swap curves using dynamic market data from the Reserve Bank of Australia
-                </p>
-                <div className="flex items-center gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
-                    <span className="text-muted-foreground">Real-time Data</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calculator className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Advanced Analytics</span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={toggleDarkMode}
-                  className="btn-secondary h-12 px-6 gap-2 text-sm font-medium"
-                >
-                  {isDarkMode ? (
-                    <>🌞 Light Mode</>
-                  ) : (
-                    <>🌙 Dark Mode</>
-                  )}
-                </button>
-              </div>
+        {/* Clean Header */}
+        <div className="mb-8">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">
+                AUD Forward Curve Construction Tool
+              </h1>
+              <p className="text-muted-foreground">
+                Build forward-looking AUD swap curves using dynamic market data from the Reserve Bank of Australia
+              </p>
             </div>
+            <button
+              onClick={toggleDarkMode}
+              className="btn-secondary h-10 px-4"
+            >
+              {isDarkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
+            </button>
           </div>
         </div>
-        {/* Enhanced Data Status Bar */}
-        <div className="rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm shadow-sm mb-8">
-          <div className="p-6">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium ${
-                    isConnected 
-                      ? 'bg-success/10 text-success border border-success/20' 
-                      : 'bg-destructive/10 text-destructive border border-destructive/20'
-                  }`}>
-                    {isConnected ? (
-                      <Wifi className="h-3 w-3" />
-                    ) : (
-                      <WifiOff className="h-3 w-3" />
-                    )}
-                    <span>{isConnected ? 'Connected' : 'Disconnected'}</span>
-                  </div>
-                  <div className="text-sm">
-                    Data Source: <span className="font-semibold text-foreground">{dataSource}</span>
-                  </div>
-                </div>
-                {lastDataUpdate && (
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Info className="h-3 w-3" />
-                    <span>
-                      Last Updated: {new Date(lastDataUpdate).toLocaleTimeString('en-AU', { 
-                        hour: '2-digit', 
-                        minute: '2-digit', 
-                        second: '2-digit' 
-                      })}
-                    </span>
-                  </div>
+
+        {/* Clean Data Status Bar */}
+        <div className="bg-card border border-border rounded-lg p-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                {isConnected ? (
+                  <Wifi className="h-4 w-4 text-success" />
+                ) : (
+                  <WifiOff className="h-4 w-4 text-destructive" />
                 )}
+                <span className="text-sm">
+                  Data Source: <span className="font-medium">{dataSource}</span>
+                </span>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={fetchMarketData}
-                  disabled={isLoadingData}
-                  className="btn-primary h-11 px-6 flex items-center justify-center gap-2 text-sm font-medium min-w-[150px] disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <RefreshCw className={`h-4 w-4 ${isLoadingData ? 'animate-spin' : ''}`} />
-                  {isLoadingData ? 'Updating...' : 'Refresh Data'}
-                </button>
-                <button
-                  onClick={downloadCSV}
-                  className="btn-ghost h-11 px-6 flex items-center justify-center gap-2 text-sm font-medium min-w-[150px] border-2"
-                >
-                  <Download className="h-4 w-4" />
-                  Download CSV
-                </button>
-              </div>
+              {lastDataUpdate && (
+                <span className="text-xs text-muted-foreground">
+                  Last Updated: {new Date(lastDataUpdate).toLocaleTimeString('en-AU', { 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit' 
+                  })}
+                </span>
+              )}
             </div>
-            {dataFetchErrors.length > 0 && (
-              <div className="mt-4 p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive">
-                <div className="flex items-start gap-2">
-                  <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <strong className="text-sm font-medium">Data Fetch Errors:</strong>
-                    <p className="text-sm mt-1">{dataFetchErrors.join(', ')}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-            {dataSource.includes('Mock Data') && (
-              <div className="mt-4 p-4 rounded-lg bg-warning/10 border border-warning/20 text-warning-foreground">
-                <div className="flex items-start gap-2">
-                  <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <strong className="text-sm font-medium">Using Mock Data:</strong>
-                    <p className="text-sm mt-1">Live RBA data unavailable, using representative market rates with slight randomization</p>
-                  </div>
-                </div>
-              </div>
-            )}
+            <div className="flex gap-2">
+              <button
+                onClick={fetchMarketData}
+                disabled={isLoadingData}
+                className="btn-primary h-10 px-4 flex items-center gap-2"
+              >
+                <RefreshCw className={`h-4 w-4 ${isLoadingData ? 'animate-spin' : ''}`} />
+                {isLoadingData ? 'Updating...' : 'Refresh Data'}
+              </button>
+              <button
+                onClick={downloadCSV}
+                className="btn-ghost h-10 px-4 flex items-center gap-2"
+              >
+                <Download className="h-4 w-4" />
+                Download CSV
+              </button>
+            </div>
           </div>
+          {dataFetchErrors.length > 0 && (
+            <div className="mt-3 p-3 rounded-md bg-destructive/10 border border-destructive/20 text-destructive">
+              <strong>Data Fetch Errors:</strong> {dataFetchErrors.join(', ')}
+            </div>
+          )}
+          {dataSource.includes('Mock Data') && (
+            <div className="mt-3 p-3 rounded-md bg-warning/10 border border-warning/20 text-warning-foreground">
+              <strong>Using Mock Data:</strong> Live RBA data unavailable, using representative market rates
+            </div>
+          )}
         </div>
-        {/* Enhanced Input Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {/* Clean Input Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* BBSW Rates Card */}
-          <div className="group">
-            <div className="rounded-xl border border-border/50 bg-card shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 border-b border-border/50">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
-                    <Calculator className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">Current Spot Rates (BBSW)</h3>
-                    <p className="text-sm text-muted-foreground">Bank Accepted Bill Swap Rates</p>
-                  </div>
-                  {isLoadingData && (
-                    <RefreshCw className="h-4 w-4 animate-spin text-primary ml-auto" />
-                  )}
+          <div className="bg-card border border-border rounded-lg p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Calculator className="h-5 w-5 text-primary" />
+              <div>
+                <h3 className="font-semibold text-foreground">Current Spot Rates (BBSW)</h3>
+                <p className="text-sm text-muted-foreground">Bank Accepted Bill Swap Rates</p>
+              </div>
+              {isLoadingData && (
+                <RefreshCw className="h-4 w-4 animate-spin text-primary ml-auto" />
+              )}
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-foreground">Cash Rate:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    step="0.0001"
+                    value={spotRates?.cash?.toFixed(4) || ''}
+                    onChange={e => setSpotRates({ ...spotRates!, cash: parseFloat(e.target.value) || 0 })}
+                    className="input w-20 text-right font-mono text-sm"
+                  />
+                  <span className="text-muted-foreground text-sm">%</span>
                 </div>
               </div>
-              <div className="p-6 space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50">
-                    <label className="text-sm font-medium text-foreground min-w-[100px]">Cash Rate:</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        step="0.0001"
-                        value={spotRates?.cash?.toFixed(4) || ''}
-                        onChange={e => setSpotRates({ ...spotRates!, cash: parseFloat(e.target.value) || 0 })}
-                        className="input w-20 text-right font-mono text-sm"
-                      />
-                      <span className="text-muted-foreground text-sm font-medium">%</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50">
-                    <label className="text-sm font-medium text-foreground min-w-[100px]">1M BBSW:</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        step="0.0001"
-                        value={spotRates?.oneMonth?.toFixed(4) || ''}
-                        onChange={e => setSpotRates({ ...spotRates!, oneMonth: parseFloat(e.target.value) || 0 })}
-                        className="input w-20 text-right font-mono text-sm"
-                      />
-                      <span className="text-muted-foreground text-sm font-medium">%</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50">
-                    <label className="text-sm font-medium text-foreground min-w-[100px]">3M BBSW:</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        step="0.0001"
-                        value={spotRates?.threeMonth?.toFixed(4) || ''}
-                        onChange={e => setSpotRates({ ...spotRates!, threeMonth: parseFloat(e.target.value) || 0 })}
-                        className="input w-20 text-right font-mono text-sm"
-                      />
-                      <span className="text-muted-foreground text-sm font-medium">%</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50">
-                    <label className="text-sm font-medium text-foreground min-w-[100px]">6M BBSW:</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        step="0.0001"
-                        value={spotRates?.sixMonth?.toFixed(4) || ''}
-                        onChange={e => setSpotRates({ ...spotRates!, sixMonth: parseFloat(e.target.value) || 0 })}
-                        className="input w-20 text-right font-mono text-sm"
-                      />
-                      <span className="text-muted-foreground text-sm font-medium">%</span>
-                    </div>
-                  </div>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-foreground">1M BBSW:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    step="0.0001"
+                    value={spotRates?.oneMonth?.toFixed(4) || ''}
+                    onChange={e => setSpotRates({ ...spotRates!, oneMonth: parseFloat(e.target.value) || 0 })}
+                    className="input w-20 text-right font-mono text-sm"
+                  />
+                  <span className="text-muted-foreground text-sm">%</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-foreground">3M BBSW:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    step="0.0001"
+                    value={spotRates?.threeMonth?.toFixed(4) || ''}
+                    onChange={e => setSpotRates({ ...spotRates!, threeMonth: parseFloat(e.target.value) || 0 })}
+                    className="input w-20 text-right font-mono text-sm"
+                  />
+                  <span className="text-muted-foreground text-sm">%</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-foreground">6M BBSW:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    step="0.0001"
+                    value={spotRates?.sixMonth?.toFixed(4) || ''}
+                    onChange={e => setSpotRates({ ...spotRates!, sixMonth: parseFloat(e.target.value) || 0 })}
+                    className="input w-20 text-right font-mono text-sm"
+                  />
+                  <span className="text-muted-foreground text-sm">%</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Government Bonds Card */}
-          <div className="group">
-            <div className="rounded-xl border border-border/50 bg-card shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-success/5 to-success/10 p-6 border-b border-border/50">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-success/10 border border-success/20">
-                    <TrendingUp className="h-5 w-5 text-success" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">Government Bond Yields</h3>
-                    <p className="text-sm text-muted-foreground">Australian Government Securities</p>
-                  </div>
-                  {isLoadingData && (
-                    <RefreshCw className="h-4 w-4 animate-spin text-success ml-auto" />
-                  )}
+          <div className="bg-card border border-border rounded-lg p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              <div>
+                <h3 className="font-semibold text-foreground">Government Bond Yields</h3>
+                <p className="text-sm text-muted-foreground">Australian Government Securities</p>
+              </div>
+              {isLoadingData && (
+                <RefreshCw className="h-4 w-4 animate-spin text-primary ml-auto" />
+              )}
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-foreground">2Y Govt Bond:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={govBonds && typeof govBonds.bond2Y === 'number' && !isNaN(govBonds.bond2Y) ? govBonds.bond2Y.toFixed(2) : ''}
+                    onChange={(e) => setGovBonds({...govBonds!, bond2Y: parseFloat(e.target.value) || 0})}
+                    className="input w-20 text-right font-mono text-sm"
+                  />
+                  <span className="text-muted-foreground text-sm">%</span>
                 </div>
               </div>
-              <div className="p-6 space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50">
-                    <label className="text-sm font-medium text-foreground min-w-[100px]">2Y Govt Bond:</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={govBonds && typeof govBonds.bond2Y === 'number' && !isNaN(govBonds.bond2Y) ? govBonds.bond2Y.toFixed(2) : ''}
-                        onChange={(e) => setGovBonds({...govBonds!, bond2Y: parseFloat(e.target.value) || 0})}
-                        className="input w-20 text-right font-mono text-sm"
-                      />
-                      <span className="text-muted-foreground text-sm font-medium">%</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50">
-                    <label className="text-sm font-medium text-foreground min-w-[100px]">3Y Govt Bond:</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={govBonds && typeof govBonds.bond3Y === 'number' && !isNaN(govBonds.bond3Y) ? govBonds.bond3Y.toFixed(2) : ''}
-                        onChange={(e) => setGovBonds({...govBonds!, bond3Y: parseFloat(e.target.value) || 0})}
-                        className="input w-20 text-right font-mono text-sm"
-                      />
-                      <span className="text-muted-foreground text-sm font-medium">%</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50">
-                    <label className="text-sm font-medium text-foreground min-w-[100px]">5Y Govt Bond:</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={govBonds && typeof govBonds.bond5Y === 'number' && !isNaN(govBonds.bond5Y) ? govBonds.bond5Y.toFixed(2) : ''}
-                        onChange={(e) => setGovBonds({...govBonds!, bond5Y: parseFloat(e.target.value) || 0})}
-                        className="input w-20 text-right font-mono text-sm"
-                      />
-                      <span className="text-muted-foreground text-sm font-medium">%</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50">
-                    <label className="text-sm font-medium text-foreground min-w-[100px]">10Y Govt Bond:</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={govBonds && typeof govBonds.bond10Y === 'number' && !isNaN(govBonds.bond10Y) ? govBonds.bond10Y.toFixed(2) : ''}
-                        onChange={(e) => setGovBonds({...govBonds!, bond10Y: parseFloat(e.target.value) || 0})}
-                        className="input w-20 text-right font-mono text-sm"
-                      />
-                      <span className="text-muted-foreground text-sm font-medium">%</span>
-                    </div>
-                  </div>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-foreground">3Y Govt Bond:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={govBonds && typeof govBonds.bond3Y === 'number' && !isNaN(govBonds.bond3Y) ? govBonds.bond3Y.toFixed(2) : ''}
+                    onChange={(e) => setGovBonds({...govBonds!, bond3Y: parseFloat(e.target.value) || 0})}
+                    className="input w-20 text-right font-mono text-sm"
+                  />
+                  <span className="text-muted-foreground text-sm">%</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-foreground">5Y Govt Bond:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={govBonds && typeof govBonds.bond5Y === 'number' && !isNaN(govBonds.bond5Y) ? govBonds.bond5Y.toFixed(2) : ''}
+                    onChange={(e) => setGovBonds({...govBonds!, bond5Y: parseFloat(e.target.value) || 0})}
+                    className="input w-20 text-right font-mono text-sm"
+                  />
+                  <span className="text-muted-foreground text-sm">%</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-foreground">10Y Govt Bond:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={govBonds && typeof govBonds.bond10Y === 'number' && !isNaN(govBonds.bond10Y) ? govBonds.bond10Y.toFixed(2) : ''}
+                    onChange={(e) => setGovBonds({...govBonds!, bond10Y: parseFloat(e.target.value) || 0})}
+                    className="input w-20 text-right font-mono text-sm"
+                  />
+                  <span className="text-muted-foreground text-sm">%</span>
                 </div>
               </div>
             </div>
