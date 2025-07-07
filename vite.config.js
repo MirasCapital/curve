@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Curve/', // Set this to match your repository name
-})
+  base: '/curve/', // Ensure this matches your repository name (case-sensitive)
+});
