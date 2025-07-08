@@ -378,8 +378,8 @@ const AUDForwardCurveTool = () => {
     <div className={`w-full max-w-7xl mx-auto p-6 ${isDarkMode ? 'bg-background text-foreground' : 'bg-background text-foreground'}`}>
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="h1 mb-2">AUD Forward Curve Construction Tool</h1>
-          <p className="text-muted-foreground">Build forward-looking AUD swap curves using dynamic market data</p>
+          <h1 className="h1 mb-2">AUD Forward Rate Curve Construction Tool</h1>
+          <p className="text-muted-foreground">Build forward-looking AUD forward rate curves using dynamic market data</p>
         </div>
         <button
           onClick={toggleDarkMode}
