@@ -379,7 +379,7 @@ const AUDForwardCurveTool = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="h1 mb-2">AUD Forward Rate Curve Construction Tool</h1>
-          <p className="text-muted-foreground">Build forward-looking AUD forward rate curves using dynamic market data</p>
+          <p className="text-muted-foreground">Build forward-looking AUD base rate curves using dynamic market data</p>
         </div>
         <button
           onClick={toggleDarkMode}
