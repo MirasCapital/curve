@@ -1,52 +1,251 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  /* Colors - Light Theme (Default) */
-  --background: 0 0% 100%; /* White */
-  --foreground: 222.2 47.4% 11.2%; /* Almost black */
-
-  --primary: 214.5 91.8% 57.3%; /* A vibrant blue for primary actions/branding */
-  --primary-foreground: 0 0% 100%; /* White text on primary */
-
-  --secondary: 210 40% 96.1%; /* Light gray for secondary elements */
-  --secondary-foreground: 222.2 47.4% 11.2%; /* Dark text on secondary */
-
-  --tertiary: 210 20% 98%; /* Even lighter gray for subtle backgrounds */
-  --tertiary-foreground: 222.2 47.4% 11.2%;
-
-  --accent: 210 40% 96.1%; /* Similar to secondary, for hover/active states */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
   --accent-foreground: 222.2 47.4% 11.2%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.5rem;
+}
 
-  --muted: 210 40% 96.1%; /* Muted backgrounds (e.g., disabled, subtle info) */
-  --muted-foreground: 215.4 16.3% 46.9%; /* Muted text color */
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 217.2 32.6% 17.5%;
+  --card-foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 48%;
+}
 
-  --card: 0 0% 100%; /* Card background (white) */
-  --card-foreground: 222.2 47.4% 11.2%; /* Card text */
+* {
+  border-color: hsl(var(--border));
+}
 
-  --popover: 0 0% 100%; /* Popover/tooltip background */
-  --popover-foreground: 222.2 47.4% 11.2%; /* Popover/tooltip text */
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  transition: background-color 0.2s, color 0.2s;
+}
 
-  --border: 214.3 31.8% 91.4%; /* Default border color */
-  --input: 214.3 31.8% 91.4%; /* Input border/background */
-  --ring: 214.5 91.8% 57.3%; /* Focus ring color (primary blue) */
+/* All custom properties and font imports remain at the top */
+/* :root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.5rem;
+}
 
-  --destructive: 0 84.2% 60.2%; /* Red for errors/destructive actions */
-  --destructive-foreground: 0 0% 98%; /* White text on destructive */
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 48%;
+}
 
-  --success: 142.1 76.2% 36.3%; /* Green for success */
-  --success-foreground: 0 0% 98%;
+/* All @apply usages removed. Use Tailwind classes in JSX only. */
 
-  --warning: 48 96% 45.3%; /* Yellow for warnings */
-  --warning-foreground: 222.2 47.4% 11.2%;
+/* Google Finance specific styles */
+.finance-header {
+  background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+  border-bottom: 1px solid #e8eaed;
+}
 
-  --info: 214.5 91.8% 57.3%; /* Blue for informational messages (same as primary) */
-  --info-foreground: 0 0% 100%;
+.finance-card {
+  background: white;
+  border: 1px solid #e8eaed;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.08), 0 4px 8px rgba(60, 64, 67, 0.04);
+  transition: box-shadow 0.2s ease;
+}
 
-  /* Spacing & Radii */
-  --radius: 0.75rem; /* Base border radius for most elements (e.g., buttons, cards) */
+.finance-card:hover {
+  box-shadow: 0 2px 8px rgba(60, 64, 67, 0.15), 0 8px 16px rgba(60, 64, 67, 0.08);
+}
 
-  /* Typography - Default Fonts (Assuming these are loaded globally, e.g., via Next.js Font) */
-  /* Example for Google Fonts like Roboto/Inter and a display font like Product Sans (if available) */
-  --font-sans: 'Roboto', 'Inter', system-ui, sans-serif;
-  /* --font-display: 'Product Sans', 'Inter', system-ui, sans-serif; */
+.finance-input {
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.finance-input:focus {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+}
+
+.finance-button {
+  background: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.finance-button:hover:not(:disabled) {
+  background: #1557b0;
+  box-shadow: 0 2px 4px rgba(26, 115, 232, 0.2);
+}
+
+.finance-button:disabled {
+  background: #f1f3f4;
+  color: #9aa0a6;
+  cursor: not-allowed;
+}
+
+.finance-button-outline {
+  background: white;
+  color: #1a73e8;
+  border: 1px solid #dadce0;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.finance-button-outline:hover:not(:disabled) {
+  border-color: #1a73e8;
+  background: #f8f9fa;
+}
+
+.finance-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.finance-table th {
+  background: #f8f9fa;
+  padding: 12px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 14px;
+  color: #5f6368;
+  border-bottom: 1px solid #e8eaed;
+}
+
+.finance-table td {
+  padding: 12px;
+  font-size: 14px;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.finance-table tr:hover {
+  background: #f8f9fa;
+}
+
+.finance-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #e8f0fe;
+  color: #1a73e8;
+  border: 1px solid #dadce0;
+}
+
+/* Chart container styling */
+.chart-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid #e8eaed;
+}
+
+/* Status indicators */
+.status-connected {
+  color: #34a853;
+}
+
+.status-disconnected {
+  color: #ea4335;
+}
+
+.status-warning {
+  color: #fbbc04;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f3f4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dadce0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #bdc1c6;
 }
 
 /* Dark Theme */
@@ -360,27 +559,6 @@ a:hover {
   font-size: 0.875rem; /* text-sm */
   color: hsl(var(--muted-foreground)); /* text-muted-foreground */
   box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-sm */
-}
-
-.chart-container {
-  border-radius: 0.75rem; /* rounded-xl */
-  border: 1px solid hsl(var(--border)); /* border */
-  background-color: hsl(var(--card)); /* bg-card */
-  color: hsl(var(--card-foreground)); /* text-card-foreground */
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-elevation-1 */
-  margin-bottom: 1.5rem; /* mb-6 */
-  padding: 1rem; /* p-4 */
-  transition: box-shadow 0.2s; /* transition-shadow */
-}
-@media (min-width: 640px) {
-  .chart-container {
-    padding: 1.5rem; /* sm:p-6 */
-  }
-}
-@media (min-width: 1024px) {
-  .chart-container {
-    padding: 2rem; /* lg:p-8 */
-  }
 }
 
 /* Responsive container for charts */
