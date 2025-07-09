@@ -1,0 +1,50 @@
+# .github/workflows/deploy.yml
+
+name: Build and Deploy Frontend
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      # Remove the 'Upload build artifacts' step if you're directly deploying
+      # or keep it if you want the artifact for debugging/backup.
+      # - name: Upload build artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: dist-build
+      #     path: dist/
+
+      # ----------------------------------------------------
+      # ADD THIS DEPLOYMENT STEP for GitHub Pages
+      # This step pushes the 'dist' folder content to your publishing branch
+      # ----------------------------------------------------
+      - name: Deploy to GitHub Pages
+        if: success() # Only deploy if the build was successful
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # Built-in token for GitHub Actions
+          publish_dir: ./dist # **Crucial: This tells it to deploy the 'dist' folder**
+          # Optional: If your GitHub Pages is configured to serve from a 'gh-pages' branch,
+          # uncomment the line below. If it's configured for 'main' branch (source code)
+          # or 'docs' folder, this line is not needed or needs to be adjusted.
+          # publish_branch: gh-pages
