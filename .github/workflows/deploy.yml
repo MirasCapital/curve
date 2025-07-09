@@ -2,49 +2,67 @@
 
 name: Build and Deploy Frontend
 
+# Controls when the workflow will run
 on:
   push:
     branches:
-      - main
+      - main # Runs on pushes to the 'main' branch
+      # - develop # Uncomment if you also want to run on a 'develop' branch
 
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# A workflow run is made up of one or more jobs that can run in parallel
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest # A Linux virtual machine provided by GitHub
 
+    # --- Crucial: Grant permissions for deployment ---
+    permissions:
+      contents: write # Required to push code (e.g., to gh-pages branch)
+      pages: write    # Required for GitHub Pages deployment
+      id-token: write # Required for OpenID Connect (OIDC) authentication
+                      # Best practice for modern GitHub Pages deployments
+    # -------------------------------------------------
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Step 1: Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '18' # Or your specific Node.js version, e.g., '20'
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm ci
 
+      # Step 4: Run the build command
       - name: Build project
         run: npm run build
 
-      # Remove the 'Upload build artifacts' step if you're directly deploying
-      # or keep it if you want the artifact for debugging/backup.
-      # - name: Upload build artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: dist-build
-      #     path: dist/
+      # Step 5: Upload build artifacts (Optional but Recommended for debugging/downloading build)
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-build # Name of the artifact
+          path: dist/        # Path to the build output directory (adjust if different)
 
-      # ----------------------------------------------------
-      # ADD THIS DEPLOYMENT STEP for GitHub Pages
-      # This step pushes the 'dist' folder content to your publishing branch
-      # ----------------------------------------------------
+      # Step 6: Deploy to GitHub Pages
+      # This step takes the 'dist' folder and pushes it to the GitHub Pages branch.
       - name: Deploy to GitHub Pages
         if: success() # Only deploy if the build was successful
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # Built-in token for GitHub Actions
-          publish_dir: ./dist # **Crucial: This tells it to deploy the 'dist' folder**
-          # Optional: If your GitHub Pages is configured to serve from a 'gh-pages' branch,
-          # uncomment the line below. If it's configured for 'main' branch (source code)
-          # or 'docs' folder, this line is not needed or needs to be adjusted.
+          github_token: ${{ secrets.GITHUB_TOKEN }} # Built-in token, now with write permissions
+          publish_dir: ./dist # Path to the directory containing your static files for deployment
+          # Optional: Uncomment and specify if your GitHub Pages is configured
+          # to publish from a specific branch (e.g., 'gh-pages').
+          # If left commented, it often defaults to the 'main' branch if configured
+          # to deploy from 'main' or 'docs' folder on 'main'.
           # publish_branch: gh-pages
