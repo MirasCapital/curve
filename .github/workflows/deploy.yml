@@ -12,15 +12,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # <-- CHANGE THIS FROM 'read' to 'write'
+      contents: write # This should be 'write'
       pages: write
-      id-token: writegit add vite.config.mjs .github/workflows/deploy.yml
+      id-token: write # <-- THIS IS THE CORRECT LINE
 
-    # --- CRITICAL CHANGE: ADD THIS ENVIRONMENT BLOCK ---
     environment:
-      name: github-pages # Use the standard environment name for GitHub Pages
-      url: ${{ steps.deployment.outputs.page_url }} # Optional, but good practice to link to the deployed URL
-    # --------------------------------------------------
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout code
@@ -36,10 +34,9 @@ jobs:
 
       - name: Build project
         run: npm run build
-        env: # --- ADD THIS ENV BLOCK ---
+        env: # Add this env block for conditional base path
           NODE_ENV: production
           VITE_APP_DEPLOY_ENV: github-pages
-        # ----------------------------
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
