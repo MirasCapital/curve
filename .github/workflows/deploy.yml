@@ -1,48 +1,29 @@
-# .github/workflows/deploy.yml
-
-name: Build and Deploy Frontend
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # This should be 'write'
-      pages: write
-      id-token: write # <-- THIS IS THE CORRECT LINE
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
+          
       - name: Install dependencies
-        run: npm ci
-
-      - name: Build project
+        run: npm install
+        
+      - name: Build
         run: npm run build
-        env: # Add this env block for conditional base path
-          NODE_ENV: production
-          VITE_APP_DEPLOY_ENV: github-pages
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
-
+        
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          cname: www.mirascapital.com  # Important for custom domain
