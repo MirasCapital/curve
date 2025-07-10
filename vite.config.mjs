@@ -6,14 +6,20 @@ export default defineConfig({
   plugins: [react()],
   base: '/curve/', // Keep this as it's correct for your GitHub Pages subpath
 
-  // --- ADD THIS BUILD CONFIGURATION ---
   build: {
+    outDir: 'dist', // Ensure output directory is 'dist'
     rollupOptions: {
       input: {
-        main: './index.html' // Explicitly tell Vite to use the root index.html as the main entry point
+        main: './index.html' // Keep this explicit input for clarity
+      },
+      output: {
+        // --- ADD THESE OUTPUT OPTIONS ---
+        // Ensures JS entry files are named correctly relative to the base
+        entryFileNames: 'assets/[name]-[hash].js',
+        // Ensures other assets (like CSS, images) are named correctly relative to the base
+        assetFileNames: 'assets/[name]-[hash].[ext]',
+        // --------------------------------
       }
-    },
-    outDir: 'dist' // Ensure output directory is 'dist'
+    }
   }
-  // ------------------------------------
 });
