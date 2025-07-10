@@ -3,6 +3,6 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
+  base: '/curve/',
   plugins: [react()],
-  base: '/curve/', // This line should be here
 });
