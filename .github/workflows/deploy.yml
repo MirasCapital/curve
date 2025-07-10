@@ -2,67 +2,47 @@
 
 name: Build and Deploy Frontend
 
-# Controls when the workflow will run
 on:
   push:
     branches:
-      - main # Runs on pushes to the 'main' branch
-      # - develop # Uncomment if you also want to run on a 'develop' branch
-
-  # Allows you to run this workflow manually from the Actions tab
+      - main
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run in parallel
 jobs:
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest # A Linux virtual machine provided by GitHub
-
-    # --- Crucial: Grant permissions for deployment ---
+    runs-on: ubuntu-latest
     permissions:
-      contents: write # Required to push code (e.g., to gh-pages branch)
-      pages: write    # Required for GitHub Pages deployment
-      id-token: write # Required for OpenID Connect (OIDC) authentication
-                      # Best practice for modern GitHub Pages deployments
-    # -------------------------------------------------
+      contents: write
+      pages: write
+      id-token: write
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Step 1: Checkout the repository code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # Or your specific Node.js version, e.g., '20'
+          node-version: '18'
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # Step 4: Run the build command
       - name: Build project
         run: npm run build
 
-      # Step 5: Upload build artifacts (Optional but Recommended for debugging/downloading build)
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dist-build # Name of the artifact
-          path: dist/        # Path to the build output directory (adjust if different)
+          name: dist-build
+          path: dist/
 
-      # Step 6: Deploy to GitHub Pages
-      # This step takes the 'dist' folder and pushes it to the GitHub Pages branch.
       - name: Deploy to GitHub Pages
-        if: success() # Only deploy if the build was successful
+        if: success()
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # Built-in token, now with write permissions
-          publish_dir: ./dist # Path to the directory containing your static files for deployment
-          # Optional: Uncomment and specify if your GitHub Pages is configured
-          # to publish from a specific branch (e.g., 'gh-pages').
-          # If left commented, it often defaults to the 'main' branch if configured
-          # to deploy from 'main' or 'docs' folder on 'main'.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          # --- CRITICAL CHANGE: ENSURE THIS LINE IS COMMENTED OUT ---
           # publish_branch: gh-pages
+          # ---------------------------------------------------------
