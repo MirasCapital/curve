@@ -37,17 +37,12 @@ jobs:
           name: dist-build
           path: dist/
 
-      - name: Deploy to GitHub Pages
+- name: Deploy to GitHub Pages
         if: success()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          # Critical: Ensure these are explicitly set for overwriting
-          allow_empty_commit: false # Prevent empty commits
-          keep_files: false         # <-- CRITICAL: Do NOT preserve existing files on the branch
-          force_orphan: true        # <-- Recommended to ensure a clean deploy if issues persist
-
           # --- CRITICAL CHANGE: ENSURE THIS LINE IS COMMENTED OUT ---
           # publish_branch: gh-pages
           # ---------------------------------------------------------
