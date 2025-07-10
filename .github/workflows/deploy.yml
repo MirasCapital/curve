@@ -16,6 +16,12 @@ jobs:
       pages: write
       id-token: write
 
+    # --- CRITICAL CHANGE: ADD THIS ENVIRONMENT BLOCK ---
+    environment:
+      name: github-pages # Use the standard environment name for GitHub Pages
+      url: ${{ steps.deployment.outputs.page_url }} # Optional, but good practice to link to the deployed URL
+    # --------------------------------------------------
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -31,12 +37,11 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # The artifact name "github-pages" is special for GitHub Pages deployment
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist' # Ensure this is the correct path to your build output
+          path: './dist'
 
       - name: Deploy to GitHub Pages
-        id: deployment
+        id: deployment # Keep this ID for referencing its output (e.g., page_url)
         uses: actions/deploy-pages@v4
