@@ -12,9 +12,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # <-- CHANGE THIS FROM 'read' to 'write'
       pages: write
-      id-token: write
+      id-token: writegit add vite.config.mjs .github/workflows/deploy.yml
 
     # --- CRITICAL CHANGE: ADD THIS ENVIRONMENT BLOCK ---
     environment:
