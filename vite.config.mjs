@@ -2,23 +2,26 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+// Determine the base path
+// Use '/curve/' for GitHub Pages project sites when deployed,
+// otherwise use '/' for local development.
+const BASE_PATH = process.env.NODE_ENV === 'production' && process.env.VITE_APP_DEPLOY_ENV === 'github-pages'
+  ? '/curve/'
+  : '/';
+
 export default defineConfig({
   plugins: [react()],
-  base: '/curve/', // Keep this as it's correct for your GitHub Pages subpath
+  base: BASE_PATH, // Use the dynamically determined base path
 
   build: {
-    outDir: 'dist', // Ensure output directory is 'dist'
+    outDir: 'dist',
     rollupOptions: {
       input: {
-        main: './index.html' // Keep this explicit input for clarity
+        main: './index.html'
       },
       output: {
-        // --- ADD THESE OUTPUT OPTIONS ---
-        // Ensures JS entry files are named correctly relative to the base
         entryFileNames: 'assets/[name]-[hash].js',
-        // Ensures other assets (like CSS, images) are named correctly relative to the base
         assetFileNames: 'assets/[name]-[hash].[ext]',
-        // --------------------------------
       }
     }
   }

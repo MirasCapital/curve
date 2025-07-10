@@ -36,6 +36,10 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env: # --- ADD THIS ENV BLOCK ---
+          NODE_ENV: production
+          VITE_APP_DEPLOY_ENV: github-pages
+        # ----------------------------
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -43,5 +47,5 @@ jobs:
           path: './dist'
 
       - name: Deploy to GitHub Pages
-        id: deployment # Keep this ID for referencing its output (e.g., page_url)
+        id: deployment
         uses: actions/deploy-pages@v4
