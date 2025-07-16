@@ -408,12 +408,12 @@ const AUDForwardCurveTool = () => {
                 Last Updated: {new Date(lastDataUpdate).toLocaleTimeString()}
               </div>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={toggleDarkMode}
-                className="text-white hover:bg-white/10 border-gray-600"
+                className="bg-transparent border border-gray-400 hover:bg-gray-700 text-gray-200 hover:text-white transition-colors"
               >
-                {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               </Button>
             </div>
           </div>
