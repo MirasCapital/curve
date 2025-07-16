@@ -210,17 +210,31 @@ const AUDForwardCurveTool = () => {
 
   // Initialize dark mode based on system preference
   useEffect(() => {
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setIsDarkMode(prefersDark);
+    document.documentElement.classList.toggle('dark', prefersDark);
+    document.documentElement.style.colorScheme = prefersDark ? 'dark' : 'light';
+    
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsDarkMode(e.matches);
+      document.documentElement.classList.toggle('dark', e.matches);
+      document.documentElement.style.colorScheme = e.matches ? 'dark' : 'light';
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    document.documentElement.classList.toggle('dark', newDarkMode);
-    document.documentElement.style.colorScheme = newDarkMode ? 'dark' : 'light';
+    setIsDarkMode(prev => {
+      const newDarkMode = !prev;
+      document.documentElement.classList.toggle('dark', newDarkMode);
+      document.documentElement.style.colorScheme = newDarkMode ? 'dark' : 'light';
+      localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
+      return newDarkMode;
+    });
   };
 
   const fetchMarketData = useCallback(async () => {

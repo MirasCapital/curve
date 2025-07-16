@@ -1,3 +1,166 @@
+/* Base styles for both light and dark modes */
+:root {
+  color-scheme: light;
+  --background: #ffffff;
+  --text: #111827;
+  --text-secondary: #4B5563;
+  --border: #E5E7EB;
+  --input-bg: #ffffff;
+  --card-bg: #ffffff;
+  --hover: #F3F4F6;
+}
+
+/* Dark mode variables */
+:root.dark {
+  color-scheme: dark;
+  --background: #111827;
+  --text: #F9FAFB;
+  --text-secondary: #D1D5DB;
+  --border: #374151;
+  --input-bg: #1F2937;
+  --card-bg: #1F2937;
+  --hover: #374151;
+}
+
+/* Apply variables to elements */
+body {
+  background-color: var(--background);
+  color: var(--text);
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.bg-white {
+  background-color: var(--card-bg);
+}
+
+input[type="number"] {
+  color: var(--text);
+  background-color: var(--input-bg);
+  border-color: var(--border);
+}
+
+/* Mobile specific improvements */
+@media (max-width: 640px) {
+  /* Light mode specific mobile styles */
+  body {
+    background-color: var(--background);
+  }
+
+  .bg-white {
+    background-color: var(--card-bg);
+  }
+
+  input[type="number"] {
+    background-color: var(--input-bg);
+    color: var(--text);
+  }
+
+  /* Improve touch targets */
+  button,
+  [role="button"],
+  input,
+  select {
+    min-height: 44px;
+    font-size: 16px; /* Prevent iOS zoom on input */
+  }
+
+  /* Card improvements */
+  .card {
+    border-color: var(--border);
+    background-color: var(--card-bg);
+  }
+
+  /* Chart improvements */
+  .recharts-wrapper {
+    font-size: 12px;
+  }
+
+  .recharts-cartesian-axis-tick-value {
+    fill: var(--text-secondary);
+  }
+
+  .recharts-tooltip {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+  }
+
+  /* Table improvements */
+  table {
+    background-color: var(--card-bg);
+  }
+
+  th,
+  td {
+    color: var(--text);
+  }
+
+  thead {
+    background-color: var(--card-bg);
+  }
+
+  tr {
+    border-color: var(--border);
+  }
+}
+
+/* Smooth transitions */
+.transition-colors,
+button,
+input,
+.card,
+.bg-white {
+  transition: all 0.2s ease-in-out;
+}
+
+/* System preference based modes */
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) {
+    color-scheme: light;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root.dark {
+    color-scheme: dark;
+  }
+}
+
+/* Chart theme improvements */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--border);
+}
+
+.recharts-cartesian-axis-line {
+  stroke: var(--border);
+}
+
+.recharts-tooltip-wrapper {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* Input and control improvements */
+.form-input,
+.form-select {
+  background-color: var(--input-bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Button improvements */
+.button {
+  background-color: var(--input-bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.button:hover {
+  background-color: var(--hover);
+}
+
 /* Dark mode overrides */
 .dark {
   color-scheme: dark;
