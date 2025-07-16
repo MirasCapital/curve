@@ -2,163 +2,159 @@
 :root {
   color-scheme: light;
   --background: #ffffff;
-  --text: #111827;
+  --text-primary: #111827;
   --text-secondary: #4B5563;
+  --text-tertiary: #6B7280;
   --border: #E5E7EB;
   --input-bg: #ffffff;
   --card-bg: #ffffff;
   --hover: #F3F4F6;
+  --label-color: #111827;
+  --input-text: #111827;
 }
 
 /* Dark mode variables */
 :root.dark {
   color-scheme: dark;
   --background: #111827;
-  --text: #F9FAFB;
-  --text-secondary: #D1D5DB;
+  --text-primary: #F9FAFB;
+  --text-secondary: #E5E7EB;
+  --text-tertiary: #D1D5DB;
   --border: #374151;
   --input-bg: #1F2937;
   --card-bg: #1F2937;
   --hover: #374151;
+  --label-color: #F9FAFB;
+  --input-text: #F9FAFB;
 }
 
-/* Apply variables to elements */
+/* Apply base styles */
 body {
   background-color: var(--background);
-  color: var(--text);
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  color: var(--text-primary);
 }
 
+/* Label and text styles */
+label, 
+.font-medium,
+.text-gray-900 {
+  color: var(--label-color) !important;
+}
+
+.text-gray-700 {
+  color: var(--text-secondary) !important;
+}
+
+.text-gray-600,
+.text-gray-500 {
+  color: var(--text-tertiary) !important;
+}
+
+/* Input styles */
+input {
+  color: var(--input-text) !important;
+  background-color: var(--input-bg) !important;
+}
+
+/* Card and container styles */
 .bg-white {
-  background-color: var(--card-bg);
+  background-color: var(--card-bg) !important;
 }
 
-input[type="number"] {
-  color: var(--text);
-  background-color: var(--input-bg);
-  border-color: var(--border);
+.border {
+  border-color: var(--border) !important;
+}
+
+/* Chart text colors */
+.recharts-text {
+  fill: var(--text-secondary) !important;
 }
 
 /* Mobile specific improvements */
 @media (max-width: 640px) {
-  /* Light mode specific mobile styles */
-  body {
-    background-color: var(--background);
+  /* Base text colors */
+  .text-gray-900 {
+    color: var(--label-color) !important;
   }
 
-  .bg-white {
-    background-color: var(--card-bg);
+  .text-gray-700 {
+    color: var(--text-secondary) !important;
   }
 
+  .text-gray-600,
+  .text-gray-500 {
+    color: var(--text-tertiary) !important;
+  }
+
+  /* Input improvements */
   input[type="number"] {
-    background-color: var(--input-bg);
-    color: var(--text);
+    color: var(--input-text) !important;
+    background-color: var(--input-bg) !important;
+    border-color: var(--border) !important;
   }
 
-  /* Improve touch targets */
-  button,
-  [role="button"],
-  input,
-  select {
-    min-height: 44px;
-    font-size: 16px; /* Prevent iOS zoom on input */
-  }
-
-  /* Card improvements */
+  /* Card and container improvements */
   .card {
-    border-color: var(--border);
-    background-color: var(--card-bg);
+    background-color: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  /* Label visibility */
+  label {
+    color: var(--label-color) !important;
   }
 
   /* Chart improvements */
-  .recharts-wrapper {
-    font-size: 12px;
-  }
-
-  .recharts-cartesian-axis-tick-value {
-    fill: var(--text-secondary);
+  .recharts-text {
+    fill: var(--text-secondary) !important;
   }
 
   .recharts-tooltip {
     background-color: var(--card-bg) !important;
     border-color: var(--border) !important;
-    color: var(--text) !important;
+    color: var(--text-primary) !important;
   }
 
-  /* Table improvements */
-  table {
-    background-color: var(--card-bg);
+  /* Improve touch targets */
+  button, 
+  [role="button"],
+  input,
+  select {
+    min-height: 44px;
+    font-size: 16px;
   }
-
-  th,
-  td {
-    color: var(--text);
-  }
-
-  thead {
-    background-color: var(--card-bg);
-  }
-
-  tr {
-    border-color: var(--border);
-  }
-}
-
-/* Smooth transitions */
-.transition-colors,
-button,
-input,
-.card,
-.bg-white {
-  transition: all 0.2s ease-in-out;
-}
-
-/* System preference based modes */
-@media (prefers-color-scheme: light) {
-  :root:not(.dark) {
-    color-scheme: light;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root.dark {
-    color-scheme: dark;
-  }
-}
-
-/* Chart theme improvements */
-.recharts-cartesian-grid-horizontal line,
-.recharts-cartesian-grid-vertical line {
-  stroke: var(--border);
-}
-
-.recharts-cartesian-axis-line {
-  stroke: var(--border);
-}
-
-.recharts-tooltip-wrapper {
-  background-color: var(--card-bg) !important;
-  border-color: var(--border) !important;
-  color: var(--text) !important;
-}
-
-/* Input and control improvements */
-.form-input,
-.form-select {
-  background-color: var(--input-bg);
-  color: var(--text);
-  border-color: var(--border);
 }
 
 /* Button improvements */
 .button {
-  background-color: var(--input-bg);
-  color: var(--text);
-  border-color: var(--border);
+  color: var(--text-primary) !important;
 }
 
 .button:hover {
-  background-color: var(--hover);
+  background-color: var(--hover) !important;
+}
+
+/* Table text colors */
+th {
+  color: var(--label-color) !important;
+}
+
+td {
+  color: var(--text-primary) !important;
+}
+
+/* Badge colors */
+.badge {
+  color: var(--text-secondary) !important;
+  border-color: var(--border) !important;
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.2s ease-in-out, 
+              color 0.2s ease-in-out, 
+              border-color 0.2s ease-in-out,
+              fill 0.2s ease-in-out !important;
 }
 
 /* Dark mode overrides */

@@ -447,20 +447,20 @@ const AUDForwardCurveTool = () => {
                       ) : (
                         <RefreshCw className="h-4 w-4 mr-2" />
                       )}
-                      {isLoadingData ? 'Loading...' : 'Refresh RBA Data'}
+                      <span className="text-white">{isLoadingData ? 'Loading...' : 'Refresh RBA Data'}</span>
                     </Button>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">
+                    <label className="block text-sm font-medium mb-2 text-gray-900">
                       BBSW-OIS Spread (bp)
                     </label>
                     <Input
                       type="number"
                       value={oisSpread}
                       onChange={(e) => setOISSpread(Number(e.target.value))}
-                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 transition-colors duration-200"
+                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 transition-colors duration-200"
                       step="1"
                       min="0"
                       max="100"
