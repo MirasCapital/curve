@@ -373,33 +373,35 @@ const AUDForwardCurveTool = () => {
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
       {/* Header */}
       <header className="bg-black text-white p-4 shadow-md">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-white">AUD Forward Rate Curve Construction Tool</h1>
-            <p className="text-gray-300 mt-1">Build forward-looking AUD base rate curves using dynamic market data</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              {isConnected ? (
-                <Wifi className="h-4 w-4 text-green-400" />
-              ) : (
-                <WifiOff className="h-4 w-4 text-red-400" />
-              )}
-              <span className="text-sm text-gray-300">
-                {dataSource}
-              </span>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-white">AUD Forward Rate Curve Construction Tool</h1>
+              <p className="text-sm sm:text-base text-gray-300 mt-1">Build forward-looking AUD base rate curves using dynamic market data</p>
             </div>
-            <div className="text-sm text-gray-300">
-              Last Updated: {new Date(lastDataUpdate).toLocaleTimeString()}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+              <div className="flex items-center gap-2 text-xs sm:text-sm">
+                {isConnected ? (
+                  <Wifi className="h-4 w-4 text-green-400" />
+                ) : (
+                  <WifiOff className="h-4 w-4 text-red-400" />
+                )}
+                <span className="text-gray-300">
+                  {dataSource}
+                </span>
+              </div>
+              <div className="text-xs sm:text-sm text-gray-300">
+                Last Updated: {new Date(lastDataUpdate).toLocaleTimeString()}
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleDarkMode}
+                className="text-white hover:bg-white/10 border-gray-600"
+              >
+                {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </Button>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleDarkMode}
-              className="text-white hover:bg-white/10 border-gray-600"
-            >
-              {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
           </div>
         </div>
       </header>
@@ -416,15 +418,15 @@ const AUDForwardCurveTool = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="bg-white dark:bg-gray-800 rounded-b-xl">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                     <label className="text-sm font-medium text-gray-900 dark:text-white">Data Source</label>
                     <Button
                       onClick={fetchMarketData}
                       disabled={isLoadingData}
                       size="sm"
-                      className="bg-black hover:bg-gray-800 text-white font-medium rounded-md px-3 py-1.5 shadow-sm focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors duration-200"
+                      className="w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-medium rounded-md px-3 py-1.5 shadow-sm focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors duration-200"
                     >
                       {isLoadingData ? (
                         <RefreshCw className="h-4 w-4 animate-spin mr-2" />
@@ -647,10 +649,12 @@ const AUDForwardCurveTool = () => {
         <div className="mt-8">
           <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-sm dark:shadow-gray-900/10">
             <CardHeader className="bg-white dark:bg-gray-800 rounded-t-xl">
-              <CardTitle className="flex items-center space-x-2 text-base font-semibold text-gray-900 dark:text-white">
-                <TrendingUp className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                <span>RBA Government Bond Yield Curve</span>
-                <div className="flex items-center space-x-2 ml-auto">
+              <CardTitle className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 text-base font-semibold text-gray-900 dark:text-white">
+                <div className="flex items-center space-x-2">
+                  <TrendingUp className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                  <span>RBA Government Bond Yield Curve</span>
+                </div>
+                <div className="flex items-center space-x-2 w-full sm:ml-auto">
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="show-rba-curve"

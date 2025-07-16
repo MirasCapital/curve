@@ -58,3 +58,111 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
 }
+
+/* Dark mode specific styles */
+:root {
+  color-scheme: light;
+}
+
+:root.dark {
+  color-scheme: dark;
+}
+
+/* Base dark mode styles */
+.dark body {
+  background-color: #111827;
+}
+
+.dark .bg-white {
+  background-color: #1f2937;
+}
+
+.dark .border-gray-100 {
+  border-color: #374151;
+}
+
+.dark input[type="number"] {
+  color: #f9fafb;
+  background-color: #374151;
+}
+
+.dark .shadow-sm {
+  --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.dark .text-gray-900 {
+  color: #f9fafb;
+}
+
+/* Mobile specific dark mode improvements */
+@media (max-width: 640px) {
+  .dark body {
+    background-color: #111827;
+  }
+
+  .dark .bg-white {
+    background-color: #1f2937;
+  }
+
+  .dark .border-gray-100 {
+    border-color: #374151;
+  }
+
+  .dark input[type="number"] {
+    color: #f9fafb;
+    background-color: #374151;
+  }
+
+  .dark .shadow-sm {
+    --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  /* Improve touch targets on mobile */
+  button,
+  [role="button"],
+  input,
+  select {
+    min-height: 44px;
+  }
+
+  /* Improve header contrast */
+  .dark .text-gray-300 {
+    color: #d1d5db;
+  }
+
+  /* Improve card readability */
+  .dark .card {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  /* Chart improvements */
+  .recharts-wrapper {
+    font-size: 12px;
+  }
+
+  .recharts-cartesian-axis-tick-value {
+    font-size: 10px;
+  }
+
+  .recharts-tooltip-wrapper {
+    font-size: 12px;
+  }
+
+  .dark .recharts-tooltip {
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+  }
+}
+
+/* Transition improvements */
+.transition-colors {
+  transition-duration: 200ms;
+}
+
+/* System preference based dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
