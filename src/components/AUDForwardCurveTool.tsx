@@ -180,14 +180,13 @@ function cubicSplineInterpolate(points: { months: number; rate: number }[], tota
     d[j] = (c[j + 1] - c[j]) / (3 * h[j]);
   }
 
-  // Update the cubicSplineInterpolate function to return the right structure
   const result: { month: number; rate: number }[] = [];
   for (let m = 1; m <= totalMonths; m++) {
     let i = 0;
     while (i < n - 2 && m > xs[i + 1]) i++;
     const dx = m - xs[i];
     const rate = ys[i] + b[i] * dx + c[i] * dx * dx + d[i] * dx * dx * dx;
-    result.push({ month: m, rate }); // Make sure this matches XAxis dataKey
+    result.push({ month: m, rate });
   }
   return result;
 }
@@ -199,7 +198,7 @@ const AUDForwardCurveTool = () => {
   const [forwardCurve, setForwardCurve] = useState<CurvePoint[]>([]);
   const [useForecastMode, setUseForecastMode] = useState(true);
   const [interpolationMethod, setInterpolationMethod] = useState('linear');
-  const [oisSpread, setOISSpread] = useState(20);
+  const [oisSpread, setOISSpread] = useState(30);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [lastDataUpdate, setLastDataUpdate] = useState(new Date().toISOString());
   const [dataFetchErrors, setDataFetchErrors] = useState<string[]>([]);
@@ -209,9 +208,19 @@ const AUDForwardCurveTool = () => {
 
   const dataFetcher = new AUDDataFetcher();
 
+  // Initialize dark mode based on system preference
+  useEffect(() => {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
+
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark', !isDarkMode);
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    document.documentElement.classList.toggle('dark', newDarkMode);
+    document.documentElement.style.colorScheme = newDarkMode ? 'dark' : 'light';
   };
 
   const fetchMarketData = useCallback(async () => {
@@ -246,14 +255,11 @@ const AUDForwardCurveTool = () => {
     }
   }, []);
 
-  // Fix the OIS spread calculation and data structure
   const getAdjustedBBSW = (rate: number | undefined) => {
     if (typeof rate !== 'number' || isNaN(rate)) return '';
-    // OIS spread is in basis points, so divide by 100 to convert to percentage
     return (rate - (oisSpread / 100)).toFixed(4);
   };
 
-  // Update the calculateRBAYieldCurve function
   const calculateRBAYieldCurve = useCallback(() => {
     if (!spotRates || !govBonds) {
       setForwardCurve([]);
@@ -271,7 +277,6 @@ const AUDForwardCurveTool = () => {
     setForwardCurve(curve);
   }, [spotRates, govBonds, oisSpread]);
 
-  // Also update the calculateForwardCurve function
   const calculateForwardCurve = useCallback(() => {
     if (!spotRates || !govBonds) {
       setForwardCurve([]);
@@ -347,15 +352,14 @@ const AUDForwardCurveTool = () => {
     a.click();
   };
 
-  // Add data validation function
   const validateAndCleanData = (data: { month: number; rate: number }[]) => {
     return data.filter(point => 
       point && 
       typeof point.rate === 'number' && 
       !isNaN(point.rate) && 
       isFinite(point.rate) &&
-      point.rate >= 0 && // Ensure rates are non-negative
-      point.rate <= 20 // Set a reasonable upper bound for rates
+      point.rate >= 0 &&
+      point.rate <= 30
     );
   };
 
@@ -366,13 +370,13 @@ const AUDForwardCurveTool = () => {
   }, [forwardCurve, forecasted, interpolated]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
       {/* Header */}
-      <header className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 shadow-lg">
+      <header className="bg-black text-white p-4 shadow-md">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-white">AUD Forward Rate Curve Construction Tool</h1>
-            <p className="text-blue-100 mt-1">Build forward-looking AUD base rate curves using dynamic market data</p>
+            <p className="text-gray-300 mt-1">Build forward-looking AUD base rate curves using dynamic market data</p>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -381,18 +385,18 @@ const AUDForwardCurveTool = () => {
               ) : (
                 <WifiOff className="h-4 w-4 text-red-400" />
               )}
-              <span className="text-sm">
+              <span className="text-sm text-gray-300">
                 {dataSource}
               </span>
             </div>
-            <div className="text-sm text-blue-100">
+            <div className="text-sm text-gray-300">
               Last Updated: {new Date(lastDataUpdate).toLocaleTimeString()}
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={toggleDarkMode}
-              className="text-white hover:bg-white/10"
+              className="text-white hover:bg-white/10 border-gray-600"
             >
               {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
@@ -404,14 +408,14 @@ const AUDForwardCurveTool = () => {
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 py-8">
         {/* Controls Row */}
         <div className="mb-8">
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl">
-            <CardHeader className="bg-white dark:bg-gray-800">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-sm dark:shadow-gray-900/10">
+            <CardHeader className="bg-white dark:bg-gray-800 rounded-t-xl">
               <CardTitle className="flex items-center space-x-2 text-lg font-semibold text-gray-900 dark:text-white">
-                <Calculator className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <Calculator className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                 <span>Curve Construction Controls</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="bg-white dark:bg-gray-800">
+            <CardContent className="bg-white dark:bg-gray-800 rounded-b-xl">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between gap-2">
@@ -420,7 +424,7 @@ const AUDForwardCurveTool = () => {
                       onClick={fetchMarketData}
                       disabled={isLoadingData}
                       size="sm"
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md px-3 py-1.5 shadow-sm focus:ring-2 focus:ring-blue-500"
+                      className="bg-black hover:bg-gray-800 text-white font-medium rounded-md px-3 py-1.5 shadow-sm focus:ring-2 focus:ring-gray-500 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors duration-200"
                     >
                       {isLoadingData ? (
                         <RefreshCw className="h-4 w-4 animate-spin mr-2" />
@@ -440,7 +444,7 @@ const AUDForwardCurveTool = () => {
                       type="number"
                       value={oisSpread}
                       onChange={(e) => setOISSpread(Number(e.target.value))}
-                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 transition-colors duration-200"
                       step="1"
                       min="0"
                       max="100"
@@ -472,20 +476,20 @@ const AUDForwardCurveTool = () => {
         {/* Charts and Tables Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Current Spot Rates */}
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl">
-            <CardHeader className="bg-white dark:bg-gray-800">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-sm dark:shadow-gray-900/10">
+            <CardHeader className="bg-white dark:bg-gray-800 rounded-t-xl">
               <CardTitle className="flex items-center justify-between text-base font-semibold text-gray-900 dark:text-white">
                 <span>Current Spot Rates (BBSW)</span>
-                <Badge variant="outline" className="bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200 border-blue-200 dark:border-blue-700">
+                <Badge variant="outline" className="bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-600">
                   {spotRates?.cash ? `${spotRates.cash.toFixed(2)}%` : 'Loading...'}
                 </Badge>
               </CardTitle>
             </CardHeader>
-            <CardContent className="bg-white dark:bg-gray-800">
+            <CardContent className="bg-white dark:bg-gray-800 rounded-b-xl">
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Cash Rate</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Cash Rate</label>
                     <Input
                       type="number"
                       value={spotRates?.cash || ''}
@@ -495,12 +499,12 @@ const AUDForwardCurveTool = () => {
                         threeMonth: prev?.threeMonth || 0,
                         sixMonth: prev?.sixMonth || 0
                       }))}
-                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
                       step="0.01"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">1M BBSW</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">1M BBSW</label>
                     <Input
                       type="number"
                       value={spotRates?.oneMonth || ''}
@@ -510,12 +514,12 @@ const AUDForwardCurveTool = () => {
                         threeMonth: prev?.threeMonth || 0,
                         sixMonth: prev?.sixMonth || 0
                       }))}
-                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
                       step="0.01"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">3M BBSW</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">3M BBSW</label>
                     <Input
                       type="number"
                       value={spotRates?.threeMonth || ''}
@@ -525,12 +529,12 @@ const AUDForwardCurveTool = () => {
                         threeMonth: Number(e.target.value),
                         sixMonth: prev?.sixMonth || 0
                       }))}
-                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
                       step="0.01"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">6M BBSW</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">6M BBSW</label>
                     <Input
                       type="number"
                       value={spotRates?.sixMonth || ''}
@@ -540,26 +544,26 @@ const AUDForwardCurveTool = () => {
                         threeMonth: prev?.threeMonth || 0,
                         sixMonth: Number(e.target.value)
                       }))}
-                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
                       step="0.01"
                     />
                   </div>
                 </div>
                 <Separator />
                 <div className="space-y-2">
-                  <h4 className="font-medium">Adjusted Rates (BBSW - OIS Spread)</h4>
+                  <h4 className="font-medium text-gray-900 dark:text-white">Adjusted Rates (BBSW - OIS Spread)</h4>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div className="flex justify-between">
-                      <span>1M BBSW (Adj):</span>
-                      <span className="font-mono">{getAdjustedBBSW(spotRates?.oneMonth)}%</span>
+                      <span className="text-gray-700 dark:text-gray-300">1M BBSW (Adj):</span>
+                      <span className="font-mono text-gray-900 dark:text-white">{getAdjustedBBSW(spotRates?.oneMonth)}%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>3M BBSW (Adj):</span>
-                      <span className="font-mono">{getAdjustedBBSW(spotRates?.threeMonth)}%</span>
+                      <span className="text-gray-700 dark:text-gray-300">3M BBSW (Adj):</span>
+                      <span className="font-mono text-gray-900 dark:text-white">{getAdjustedBBSW(spotRates?.threeMonth)}%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>6M BBSW (Adj):</span>
-                      <span className="font-mono">{getAdjustedBBSW(spotRates?.sixMonth)}%</span>
+                      <span className="text-gray-700 dark:text-gray-300">6M BBSW (Adj):</span>
+                      <span className="font-mono text-gray-900 dark:text-white">{getAdjustedBBSW(spotRates?.sixMonth)}%</span>
                     </div>
                   </div>
                 </div>
@@ -568,14 +572,14 @@ const AUDForwardCurveTool = () => {
           </Card>
 
           {/* Government Bond Rates */}
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl">
-            <CardHeader className="bg-white dark:bg-gray-800">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-sm dark:shadow-gray-900/10">
+            <CardHeader className="bg-white dark:bg-gray-800 rounded-t-xl">
               <CardTitle className="text-base font-semibold text-gray-900 dark:text-white">Government Bond Rates</CardTitle>
             </CardHeader>
-            <CardContent className="bg-white dark:bg-gray-800">
+            <CardContent className="bg-white dark:bg-gray-800 rounded-b-xl">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">2Y Govt Bond</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">2Y Govt Bond</label>
                   <Input
                     type="number"
                     value={govBonds?.bond2Y || ''}
@@ -585,12 +589,12 @@ const AUDForwardCurveTool = () => {
                       bond5Y: prev?.bond5Y || 0,
                       bond10Y: prev?.bond10Y || 0
                     }))}
-                    className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
                     step="0.01"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">3Y Govt Bond</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">3Y Govt Bond</label>
                   <Input
                     type="number"
                     value={govBonds?.bond3Y || ''}
@@ -600,12 +604,12 @@ const AUDForwardCurveTool = () => {
                       bond5Y: prev?.bond5Y || 0,
                       bond10Y: prev?.bond10Y || 0
                     }))}
-                    className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
                     step="0.01"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">5Y Govt Bond</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">5Y Govt Bond</label>
                   <Input
                     type="number"
                     value={govBonds?.bond5Y || ''}
@@ -615,12 +619,12 @@ const AUDForwardCurveTool = () => {
                       bond5Y: Number(e.target.value),
                       bond10Y: prev?.bond10Y || 0
                     }))}
-                    className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
                     step="0.01"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">10Y Govt Bond</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">10Y Govt Bond</label>
                   <Input
                     type="number"
                     value={govBonds?.bond10Y || ''}
@@ -630,7 +634,7 @@ const AUDForwardCurveTool = () => {
                       bond5Y: prev?.bond5Y || 0,
                       bond10Y: Number(e.target.value)
                     }))}
-                    className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="h-9 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
                     step="0.01"
                   />
                 </div>
@@ -641,10 +645,10 @@ const AUDForwardCurveTool = () => {
 
         {/* RBA Government Bond Yield Curve Chart */}
         <div className="mt-8">
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl">
-            <CardHeader className="bg-white dark:bg-gray-800">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-sm dark:shadow-gray-900/10">
+            <CardHeader className="bg-white dark:bg-gray-800 rounded-t-xl">
               <CardTitle className="flex items-center space-x-2 text-base font-semibold text-gray-900 dark:text-white">
-                <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <TrendingUp className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                 <span>RBA Government Bond Yield Curve</span>
                 <div className="flex items-center space-x-2 ml-auto">
                   <div className="flex items-center space-x-2">
@@ -652,21 +656,21 @@ const AUDForwardCurveTool = () => {
                       id="show-rba-curve"
                       checked={showRBAYieldCurve}
                       onCheckedChange={setShowRBAYieldCurve}
-                      className="data-[state=checked]:bg-blue-600"
+                      className="data-[state=checked]:bg-gray-800 dark:data-[state=checked]:bg-gray-600"
                     />
-                    <label htmlFor="show-rba-curve" className="text-sm text-muted-foreground">
+                    <label htmlFor="show-rba-curve" className="text-sm text-gray-600 dark:text-gray-400">
                       Show Cash Rate & Govt Bonds
                     </label>
                   </div>
                 </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="bg-white dark:bg-gray-800">
+            <CardContent className="bg-white dark:bg-gray-800 rounded-b-xl">
               <div className="h-80 sm:h-96">
                 {isLoadingData ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="flex flex-col items-center space-y-4">
-                      <RefreshCw className="h-8 w-8 animate-spin text-blue-500" />
+                      <RefreshCw className="h-8 w-8 animate-spin text-gray-500" />
                       <span className="text-sm text-gray-500">Loading market data...</span>
                     </div>
                   </div>
@@ -684,13 +688,12 @@ const AUDForwardCurveTool = () => {
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={showRBAYieldCurve 
-    ? forwardCurve  // Show all points including Cash
-    : forwardCurve.filter(point => point.tenor !== 'Cash')  // Hide Cash, start at 1M
-  }
-  margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
+                      ? forwardCurve
+                      : forwardCurve.filter(point => point.tenor !== 'Cash')
+                    } margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-800" />
                       <XAxis 
-                        dataKey="tenor"  // This should be "tenor" not "month"
+                        dataKey="tenor"
                         tick={{ fontSize: 12 }}
                         label={{ value: 'Term to Maturity', position: 'insideBottom', offset: -40 }}
                         className="text-gray-600 dark:text-gray-300"
@@ -720,11 +723,11 @@ const AUDForwardCurveTool = () => {
                       <Line 
                         type="monotone" 
                         dataKey="rate"
-                        stroke="#2563eb" 
+                        stroke={isDarkMode ? '#E5E7EB' : '#374151'} 
                         strokeWidth={2}
-                        dot={{ r: 4, fill: '#2563eb' }}
+                        dot={{ r: 4, fill: isDarkMode ? '#E5E7EB' : '#374151' }}
                         name="RBA Style"
-                        activeDot={{ r: 6 }}
+                        activeDot={{ r: 6, fill: isDarkMode ? '#F9FAFB' : '#1F2937' }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -736,17 +739,17 @@ const AUDForwardCurveTool = () => {
 
         {/* Monthly Interpolated Forward Curve Chart */}
         <div className="mt-8">
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl">
-            <CardHeader className="bg-white dark:bg-gray-800">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-sm dark:shadow-gray-900/10">
+            <CardHeader className="bg-white dark:bg-gray-800 rounded-t-xl">
               <CardTitle className="flex items-center space-x-2 text-base font-semibold text-gray-900 dark:text-white">
-                <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <TrendingUp className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                 <span>Monthly Interpolated Forward Curve (0–96 months)</span>
                 <div className="flex items-center space-x-2 ml-auto">
                   <Switch
                     id="use-cubic-spline"
                     checked={useForecastMode}
                     onCheckedChange={setUseForecastMode}
-                    className="data-[state=checked]:bg-blue-600"
+                    className="data-[state=checked]:bg-gray-800 dark:data-[state=checked]:bg-gray-600"
                   />
                   <label htmlFor="use-cubic-spline" className="text-sm text-gray-600 dark:text-gray-300">
                     Use Cubic Spline Interpolation (vs Linear)
@@ -754,7 +757,7 @@ const AUDForwardCurveTool = () => {
                 </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="bg-white dark:bg-gray-800">
+            <CardContent className="bg-white dark:bg-gray-800 rounded-b-xl">
               <div className="h-80 sm:h-96">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={validateAndCleanData(useForecastMode ? forecasted : interpolated)}
@@ -791,11 +794,11 @@ const AUDForwardCurveTool = () => {
                     <Line 
                       type="monotone" 
                       dataKey="rate"
-                      stroke="#2563eb" 
+                      stroke={isDarkMode ? '#E5E7EB' : '#374151'} 
                       strokeWidth={2}
                       dot={false}
                       name={useForecastMode ? 'Cubic Spline' : 'Linear'}
-                      activeDot={{ r: 4 }}
+                      activeDot={{ r: 4, fill: isDarkMode ? '#F9FAFB' : '#1F2937' }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -806,13 +809,13 @@ const AUDForwardCurveTool = () => {
 
         {/* Forward Curve Data Points Table */}
         <div className="mt-8">
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl">
-            <CardHeader className="bg-white dark:bg-gray-800">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-sm dark:shadow-gray-900/10">
+            <CardHeader className="bg-white dark:bg-gray-800 rounded-t-xl">
               <CardTitle className="text-base font-semibold text-gray-900 dark:text-white">Forward Curve Data Points</CardTitle>
             </CardHeader>
-            <CardContent className="bg-white dark:bg-gray-800">
+            <CardContent className="bg-white dark:bg-gray-800 rounded-b-xl">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm bg-white dark:bg-gray-800 transition-colors duration-200">
                   <thead>
                     <tr className="border-b border-gray-200 dark:border-gray-700">
                       <th className="text-left py-2 px-4 font-medium text-gray-900 dark:text-white">Tenor</th>

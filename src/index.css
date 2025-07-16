@@ -2,659 +2,165 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
-  --radius: 0.5rem;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 216 94% 54%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 217.2 32.6% 17.5%;
+    --card-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 216 94% 60%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 216 94% 60%;
+  }
 }
+@layer base {
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
 
-.dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 217.2 32.6% 17.5%;
-  --card-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 48%;
-}
+  h1, h2, h3, h4, h5, h6 {
+    color: hsl(var(--foreground));
+  }
 
-* {
-  border-color: hsl(var(--border));
-}
+  a {
+    color: hsl(var(--primary));
+  }
 
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  transition: background-color 0.2s, color 0.2s;
-}
-
-/* All custom properties and font imports remain at the top */
-/* :root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
-  --radius: 0.5rem;
-}
-
-.dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 48%;
-}
-
-/* All @apply usages removed. Use Tailwind classes in JSX only. */
-
-/* Google Finance specific styles */
-.finance-header {
-  background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
-  border-bottom: 1px solid #e8eaed;
-}
-
-.finance-card {
-  background: white;
-  border: 1px solid #e8eaed;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.08), 0 4px 8px rgba(60, 64, 67, 0.04);
-  transition: box-shadow 0.2s ease;
-}
-
-.finance-card:hover {
-  box-shadow: 0 2px 8px rgba(60, 64, 67, 0.15), 0 8px 16px rgba(60, 64, 67, 0.08);
-}
-
-.finance-input {
-  border: 1px solid #dadce0;
-  border-radius: 4px;
-  padding: 8px 12px;
-  font-size: 14px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.finance-input:focus {
-  outline: none;
-  border-color: #1a73e8;
-  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
-}
-
-.finance-button {
-  background: #1a73e8;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.finance-button:hover:not(:disabled) {
-  background: #1557b0;
-  box-shadow: 0 2px 4px rgba(26, 115, 232, 0.2);
-}
-
-.finance-button:disabled {
-  background: #f1f3f4;
-  color: #9aa0a6;
-  cursor: not-allowed;
-}
-
-.finance-button-outline {
-  background: white;
-  color: #1a73e8;
-  border: 1px solid #dadce0;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.finance-button-outline:hover:not(:disabled) {
-  border-color: #1a73e8;
-  background: #f8f9fa;
-}
-
-.finance-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.finance-table th {
-  background: #f8f9fa;
-  padding: 12px;
-  text-align: left;
-  font-weight: 500;
-  font-size: 14px;
-  color: #5f6368;
-  border-bottom: 1px solid #e8eaed;
-}
-
-.finance-table td {
-  padding: 12px;
-  font-size: 14px;
-  border-bottom: 1px solid #f1f3f4;
-}
-
-.finance-table tr:hover {
-  background: #f8f9fa;
-}
-
-.finance-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  background: #e8f0fe;
-  color: #1a73e8;
-  border: 1px solid #dadce0;
-}
-
-/* Chart container styling */
-.chart-container {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 24px;
-  border: 1px solid #e8eaed;
-}
-
-/* Status indicators */
-.status-connected {
-  color: #34a853;
-}
-
-.status-disconnected {
-  color: #ea4335;
-}
-
-.status-warning {
-  color: #fbbc04;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f3f4;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #dadce0;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #bdc1c6;
-}
-
-/* Dark Theme */
-.dark {
-  --background: 222.2 47.4% 11.2%; /* Dark background */
-  --foreground: 210 40% 96.1%; /* Light foreground */
-
-  --primary: 214.5 91.8% 57.3%; /* Primary remains vibrant */
-  --primary-foreground: 0 0% 100%;
-
-  --secondary: 217.2 32.6% 17.5%; /* Darker secondary */
-  --secondary-foreground: 210 40% 96.1%;
-
-  --tertiary: 217.2 20% 15%;
-  --tertiary-foreground: 210 40% 96.1%;
-
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.4% 65%;
-
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 96.1%;
-
-  --card: 222.2 47.4% 11.2%;
-  --card-foreground: 210 40% 96.1%;
-
-  --popover: 222.2 47.4% 11.2%;
-  --popover-foreground: 210 40% 96.1%;
-
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 214.5 91.8% 57.3%;
-
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-
-  --success: 142.1 70.2% 28.3%;
-  --success-foreground: 0 0% 98%;
-
-  --warning: 48 96% 35.3%;
-  --warning-foreground: 222.2 47.4% 11.2%;
-
-  --info: 214.5 91.8% 47.3%;
-  --info-foreground: 0 0% 100%;
-}
-
-/*
- * 2. Base Styles
- * Apply sensible defaults to HTML elements.
- * Prefer `text-foreground` and `bg-background` for core colors.
- */
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: var(--font-sans);
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-/* Headings - use a distinct font if `--font-display` is defined */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700; /* font-bold */
-  letter-spacing: -0.015em; /* tracking-tight */
-  /* Fallback to foreground color */
-  color: hsl(var(--foreground));
-  /* font-family: var(--font-display, var(--font-sans)); */
-}
-h1 {
-  font-size: 2.25rem; /* text-4xl */
-  line-height: 2.5rem;
-  font-family: var(--font-display, inherit);
-}
-@media (min-width: 1024px) {
-  h1 {
-    font-size: 3rem; /* lg:text-5xl */
-    line-height: 1;
+  a:hover {
+    color: hsl(var(--primary));
   }
 }
 
-h2 {
-  font-size: 1.875rem; /* text-3xl */
-  line-height: 2.25rem;
-  font-family: var(--font-display, inherit);
-}
-@media (min-width: 1024px) {
-  h2 {
-    font-size: 2.25rem; /* lg:text-4xl */
-    line-height: 2.5rem;
+@layer components {
+  .btn-primary {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
   }
-}
 
-h3 {
-  font-size: 1.5rem; /* text-2xl */
-  line-height: 2rem;
-  font-family: var(--font-display, inherit);
-}
-@media (min-width: 1024px) {
-  h3 {
-    font-size: 1.875rem; /* lg:text-3xl */
-    line-height: 2.25rem;
+  .btn-primary:hover {
+    background-color: hsl(var(--primary) / 0.9);
   }
-}
 
-h4 {
-  font-size: 1.25rem; /* text-xl */
-  line-height: 1.75rem;
-}
-@media (min-width: 1024px) {
-  h4 {
-    font-size: 1.5rem; /* lg:text-2xl */
-    line-height: 2rem;
+  .btn-secondary {
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
   }
-}
 
-h5 {
-  font-size: 1.125rem; /* text-lg */
-  line-height: 1.75rem;
-}
+  .btn-secondary:hover {
+    background-color: hsl(var(--secondary) / 0.8);
+  }
 
-h6 {
-  font-size: 1rem; /* text-base */
-  line-height: 1.5rem;
-}
+  .btn-ghost {
+    color: hsl(var(--accent-foreground));
+  }
 
-/* Links */
-a {
-  color: hsl(var(--primary));
-  transition: color 0.2s;
-}
-a:hover {
-  text-decoration: underline;
-  color: hsl(var(--primary));
-}
+  .btn-ghost:hover {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
 
-/*
- * 3. Component-Like Global Styles (for consistency, but encourage actual components)
- * These are generic styles that can be applied via classes.
- * For more complex components, build dedicated React/Vue/etc. components.
- */
+  .input {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    border-color: hsl(var(--border));
+  }
 
-/* Buttons - Primary style */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition-property: background-color, color, border-color, box-shadow;
-  transition-duration: 150ms;
-  outline: none;
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  height: 2.5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  box-sizing: border-box;
-  cursor: pointer;
-  border: none;
-}
-.btn-primary:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--ring)), 0 1px 2px 0 rgba(0,0,0,0.05);
-}
-.btn-primary:disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}
-.btn-primary:hover {
-  background-color: hsl(var(--primary) / 0.9);
-}
+  .card {
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border-color: hsl(var(--border));
+  }
 
-/* Buttons - Secondary style (e.g., outline) */
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition-property: background-color, color, border-color, box-shadow;
-  transition-duration: 150ms;
-  outline: none;
-  cursor: pointer;
-  border: 1px solid hsl(var(--input));
-  background-color: hsl(var(--secondary));
-  color: hsl(var(--secondary-foreground));
-}
-.btn-secondary:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--ring)), 0 1px 2px 0 rgba(0,0,0,0.05);
-}
-.btn-secondary:disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}
-.btn-secondary:hover {
-  background-color: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
-}
+  .table tbody tr:hover {
+    background-color: hsl(var(--muted));
+  }
 
-/* Buttons - Ghost style (minimal) */
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition-property: background-color, color, border-color, box-shadow;
-  transition-duration: 150ms;
-  outline: none;
-  cursor: pointer;
-  border: 1px solid hsl(var(--input));
-  background-color: transparent;
-  color: hsl(var(--accent-foreground));
-}
-.btn-ghost:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--ring)), 0 1px 2px 0 rgba(0,0,0,0.05);
-}
-.btn-ghost:disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}
-.btn-ghost:hover {
-  background-color: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
-}
+  .status-bar {
+    background-color: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+  }
 
-/* Input Fields - General Styling */
-.input {
-  display: flex;
-  height: 2.5rem;
-  width: 100%;
-  border-radius: 0.375rem;
-  border: 1px solid hsl(var(--input));
-  background-color: hsl(var(--background));
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  color: hsl(var(--foreground));
-  box-sizing: border-box;
-}
-.input[type="number"], .input[inputmode="numeric"] {
-  text-align: right;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
-
-/* Cards / Panels - Use semantic background and shadows */
-.card {
-  border-radius: 0.75rem;
-  border: 1px solid hsl(var(--border));
-  background-color: hsl(var(--card));
-  color: hsl(var(--card-foreground));
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
-  padding: 1.5rem;
-  transition: box-shadow 0.2s;
-}
-
-/* Tables - Cleaner, more readable, and responsive-ready */
-.table {
-  width: 100%;
-  font-size: 0.875rem;
-  caption-side: bottom;
-}
-
-.table > :not(caption) > * > * {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  text-align: left;
-}
-
-.table thead th {
-  vertical-align: middle;
-  font-weight: 500;
-  color: hsl(var(--muted-foreground));
-  background-color: hsl(var(--secondary));
-}
-
-.table tbody tr {
-  border-bottom: 1px solid hsl(var(--border));
-  transition: background-color 0.2s;
-}
-.table tbody tr:hover {
-  background-color: hsl(var(--muted), 0.5);
-}
-
-.table tbody tr:last-child {
-  border-bottom: 0;
-}
-
-.table tfoot td, .table tfoot th {
-  color: hsl(var(--muted-foreground));
-}
-
-/* Utility for status bar and info */
-.status-bar {
-  margin-top: 1rem; /* mt-4 */
-  padding: 0.75rem; /* p-3 */
-  background-color: hsl(var(--tertiary)); /* bg-tertiary */
-  display: flex; /* flex */
-  align-items: center; /* items-center */
-  justify-content: space-between; /* justify-between */
-  font-size: 0.875rem; /* text-sm */
-  color: hsl(var(--muted-foreground)); /* text-muted-foreground */
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-sm */
-}
-
-/* Responsive container for charts */
-.chart-container {
-  border-radius: 0.75rem; /* rounded-xl */
-  border: 1px solid hsl(var(--border)); /* border */
-  background-color: hsl(var(--card)); /* bg-card */
-  color: hsl(var(--card-foreground)); /* text-card-foreground */
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-elevation-1 */
-  margin-bottom: 1.5rem; /* mb-6 */
-  padding: 1rem; /* p-4 */
-  transition: box-shadow 0.2s; /* transition-shadow */
-}
-@media (min-width: 640px) {
   .chart-container {
-    padding: 1.5rem; /* sm:p-6 */
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+  }
+
+  .info-box {
+    background-color: hsl(var(--accent) / 0.1);
+    color: hsl(var(--accent-foreground));
+    border-color: hsl(var(--accent-foreground) / 0.2);
+  }
+
+  .section-title {
+    color: hsl(var(--foreground));
   }
 }
-@media (min-width: 1024px) {
-  .chart-container {
-    padding: 2rem; /* lg:p-8 */
+@layer utilities {
+  /* Dark mode chart styles */
+  .dark .recharts-cartesian-grid line {
+    stroke: hsl(var(--border));
   }
-}
 
-/* Instructions and info boxes */
-.info-box {
-  margin-top: 1rem; /* mt-4 */
-  padding: 1rem; /* p-4 */
-  border-radius: 0.5rem; /* rounded-lg */
-  border-width: 1px; /* border */
-  border-style: solid;
-  background-color: hsl(var(--info), 0.1); /* bg-info/10 */
-  color: hsl(var(--info-foreground)); /* text-info-foreground */
-  border-color: hsl(var(--info-foreground), 0.2); /* border-info-foreground/20 */
-  font-size: 0.875rem; /* text-sm */
-}
-
-/* Section headings */
-.section-title {
-  font-size: 1.25rem; /* text-xl */
-  font-weight: 600; /* font-semibold */
-  margin-bottom: 1rem; /* mb-4 */
-  display: flex; /* flex */
-  align-items: center; /* items-center */
-  gap: 0.5rem; /* gap-2 */
-  color: hsl(var(--foreground)); /* text-foreground */
-  border-bottom-width: 1px; /* border-b */
-  border-bottom-style: solid;
-  border-bottom-color: hsl(var(--border)); /* border-border */
-  padding-bottom: 0.5rem; /* pb-2 */
-  /* Subtle separator */
-}
-
-/* Data input grid */
-.input-grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1.5rem; /* gap-6 */
-  margin-bottom: 2rem; /* mb-8 */
-}
-
-/* Responsive columns */
-@media (min-width: 768px) {
-  .input-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .dark .recharts-text {
+    fill: hsl(var(--foreground));
   }
-}
-@media (min-width: 1024px) {
-  .input-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-@media (min-width: 1280px) {
-  .input-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
 
-/*
- * 4. Accessibility and Semantic Enhancements
- */
-/* Visually hidden for screen readers */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
+  /* Smooth transitions */
+  * {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
 
-/* Focus styles for keyboard navigation - important for Google-like feel */
-*:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--ring)), 0 1px 2px 0 rgba(0,0,0,0.05);
+  /* Improved dark mode input styles */
+  .dark input[type="number"] {
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
+    color: hsl(var(--card-foreground));
+  }
+
+  /* Dark mode card improvements */
+  .dark .card,
+  .dark [class*="Card"] {
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
+    color: hsl(var(--card-foreground));
+  }
 }
