@@ -1,10 +1,14 @@
-import React from 'react';
-import AUDForwardCurveTool from './components/AUDForwardCurveTool';
+import { TooltipProvider } from '@/components/ui/tooltip'
+import AUDForwardCurveTool from '@/components/AUDForwardCurveTool'
 
-export default function App() {
+function App() {
   return (
-    <div className="min-h-screen">
-      <AUDForwardCurveTool />
-    </div>
-  );
+    <TooltipProvider>
+      <div className="min-h-screen bg-background text-foreground">
+        <AUDForwardCurveTool />
+      </div>
+    </TooltipProvider>
+  )
 }
+
+export default App

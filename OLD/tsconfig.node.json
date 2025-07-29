@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "strict": true
+  },
+  "include": ["src", "*.ts", "*.d.ts"],
+  "plugins": {
+    "@tailwindcss/postcss": {},
+    "autoprefixer": {}
+  }
+}

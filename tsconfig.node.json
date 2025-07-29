@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
     "composite": true,
     "skipLibCheck": true,
     "module": "ESNext",
@@ -8,9 +7,5 @@
     "allowSyntheticDefaultImports": true,
     "strict": true
   },
-  "include": ["src", "*.ts", "*.d.ts"],
-  "plugins": {
-    "@tailwindcss/postcss": {},
-    "autoprefixer": {}
-  }
+  "include": ["vite.config.ts"]
 }
