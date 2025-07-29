@@ -14,7 +14,8 @@
       "Bash(git commit:*)",
       "Bash(ls:*)",
       "Bash(gh workflow:*)",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": []
   }
