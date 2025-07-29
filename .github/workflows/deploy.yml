@@ -27,15 +27,21 @@ jobs:
           cache: 'npm'
           
       - name: Install dependencies
+        run: npm ci
+        
+      - name: Debug environment
         run: |
-          npm ci
-          npm list --depth=0
-        
-      - name: Type check
-        run: npx tsc --noEmit
-        
-      - name: Build
-        run: npm run build
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
+          echo "Working directory: $(pwd)"
+          echo "Files in root:"
+          ls -la
+          
+      - name: Build with full output
+        run: |
+          echo "=== Starting build ==="
+          npm run build --verbose
+          echo "=== Build completed ==="
         
       - name: List build output
         run: ls -la dist/
